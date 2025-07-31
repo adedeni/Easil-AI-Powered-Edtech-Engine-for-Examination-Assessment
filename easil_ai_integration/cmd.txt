@@ -1,0 +1,11 @@
+curl -X POST "http://localhost:8000/documents" ^
+More?   -F "teacher_name=Alice" ^
+More?   -F "subject=immunologyy" ^   -F "file=@C:\Users\USER\Desktop\ML\studyassist-main\studyassist-main\pdfs\PCL\PCL 251-Basic Immunology.pdf"
+
+
+curl -X POST "http://localhost:8000/chat" -H "Content-Type: application/json" -d "{\"document_id\":\"Alice-immunologyy-bcd14f1392a646b6ae5394a331e93835\",\"question\":\"Explain immunology to me with all the important details i should know.\"}"
+
+
+curl -X POST "http://localhost:8000/quizzes" ^
+More?   -H "Content-Type: application/json" ^
+More?   -d "{\"document_id\":\"Alice-immunologyy-bcd14f1392a646b6ae5394a331e93835\",\"mcq_count\":3,\"short_count\":2,\"essay_count\":1}"

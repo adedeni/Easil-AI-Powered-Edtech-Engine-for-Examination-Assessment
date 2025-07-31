@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { margin: 5px; padding: 10px; }
+        .response { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        input { margin: 5px; padding: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>API Test Interface</h1>
+    
+    <div class="test-section">
+        <h2>Register</h2>
+        <input type="text" id="reg-name" placeholder="Name" value="Test User">
+        <input type="text" id="reg-username" placeholder="Username" value="testuser">
+        <input type="password" id="reg-password" placeholder="Password" value="password123">
+        <button onclick="testRegister()">Register</button>
+        <div id="register-response" class="response"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username" value="testuser">
+        <input type="password" id="login-password" placeholder="Password" value="password123">
+        <button onclick="testLogin()">Login</button>
+        <div id="login-response" class="response"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Get Profile</h2>
+        <button onclick="testProfile()">Get Profile</button>
+        <div id="profile-response" class="response"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Update Profile</h2>
+        <input type="text" id="update-name" placeholder="New Name" value="Updated User">
+        <button onclick="testUpdate()">Update Profile</button>
+        <div id="update-response" class="response"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Logout</h2>
+        <button onclick="testLogout()">Logout</button>
+        <div id="logout-response" class="response"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost/easil_backend/api';
+
+        async function makeRequest(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+                
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_BASE}/${endpoint}`, options);
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                return { success: false, message: 'Network error: ' + error.message };
+            }
+        }
+
+        async function testRegister() {
+            const data = {
+                name: document.getElementById('reg-name').value,
+                username: document.getElementById('reg-username').value,
+                password: document.getElementById('reg-password').value
+            };
+            
+            const result = await makeRequest('register', 'POST', data);
+            document.getElementById('register-response').innerHTML = 
+                '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+
+        async function testLogin() {
+            const data = {
+                username: document.getElementById('login-username').value,
+                password: document.getElementById('login-password').value,
+                remember: true
+            };
+            
+            const result = await makeRequest('login', 'POST', data);
+            document.getElementById('login-response').innerHTML = 
+                '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+
+        async function testProfile() {
+            const result = await makeRequest('profile', 'GET');
+            document.getElementById('profile-response').innerHTML = 
+                '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+
+        async function testUpdate() {
+            const data = {
+                name: document.getElementById('update-name').value
+            };
+            
+            const result = await makeRequest('update', 'PUT', data);
+            document.getElementById('update-response').innerHTML = 
+                '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+
+        async function testLogout() {
+            const result = await makeRequest('logout', 'POST');
+            document.getElementById('logout-response').innerHTML = 
+                '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+        }
+    </script>
+</body>
+</html> 
