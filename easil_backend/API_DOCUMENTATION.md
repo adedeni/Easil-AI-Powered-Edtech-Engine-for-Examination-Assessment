@@ -54,7 +54,7 @@ http://localhost/easil_backend/api/
     "id": 1,
     "username": "johndoe",
     "name": "John Doe",
-    "joined": "2024-01-01 12:00:00",
+    "created_at": "2024-01-01 12:00:00",
     "isLoggedIn": true
   }
 }
@@ -71,7 +71,7 @@ http://localhost/easil_backend/api/
     "id": 1,
     "username": "johndoe",
     "name": "John Doe",
-    "joined": "2024-01-01 12:00:00",
+    "created_at": "2024-01-01 12:00:00",
     "isLoggedIn": true
   }
 }
@@ -96,7 +96,7 @@ http://localhost/easil_backend/api/
     "id": 1,
     "username": "johndoe",
     "name": "John Smith",
-    "joined": "2024-01-01 12:00:00"
+    "created_at": "2024-01-01 12:00:00"
   }
 }
 ```

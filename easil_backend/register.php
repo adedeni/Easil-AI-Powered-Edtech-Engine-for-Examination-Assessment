@@ -43,8 +43,8 @@ ini_set('display_errors', 1);
                     'username' => Input::get('username'),
                     'password' => Hash::make(Input::get('password'), $salt),
                     'salt' => $salt,
-                    'joined' => date('Y-m-d H:i:s'),
-                    'group' => 1
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'roles' => 1
                 ];
                 
                 

@@ -57,8 +57,8 @@ try {
                         'username' => $input['username'],
                         'password' => Hash::make($input['password'], $salt),
                         'salt' => $salt,
-                        'joined' => date('Y-m-d H:i:s'),
-                        'group' => 1
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'roles' => 1
                     ];
                     
                     $user->create($userData);
@@ -107,7 +107,7 @@ try {
                                 'id' => $userData->id,
                                 'username' => $userData->username,
                                 'name' => $userData->name,
-                                'joined' => $userData->joined,
+                                'created_at' => $userData->createdAt,
                                 'isLoggedIn' => true
                             ]
                         ];
@@ -151,7 +151,7 @@ try {
                             'id' => $userData->id,
                             'username' => $userData->username,
                             'name' => $userData->name,
-                            'joined' => $userData->joined,
+                            'created_at' => $userData->createdAt,
                             'isLoggedIn' => true
                         ]
                     ];
@@ -193,7 +193,7 @@ try {
                                 'id' => $userData->id,
                                 'username' => $userData->username,
                                 'name' => $userData->name,
-                                'joined' => $userData->joined
+                                'created_at' => $userData->createdAt
                             ]
                         ];
                     } else {

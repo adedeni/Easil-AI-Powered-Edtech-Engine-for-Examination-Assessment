@@ -6,7 +6,7 @@
         'host' => '127.0.0.1', 
         'username' =>'root',
         'password' => '',
-        'db' => 'oop' 
+        'db' => 'easil' 
     ],
     'remember' => [
         'cookie_name' => 'hash', 

@@ -74,10 +74,10 @@ class User{
                     Session::put($this->_sessionName, $this->data()->id);  
                     if($remember){
                         $hash = Hash::unique();
-                        $hashCheck = $this->_db->get('users_session', ['user_id', '=', $this->data()->id]);
+                        $hashCheck = $this->_db->get('users_session', ['users_id', '=', $this->data()->id]);
                             if(!$hashCheck->count()){
                                 $this->_db->insert('users_session', [
-                                    'user_id' => $this->data()->id,
+                                    'users_id' => $this->data()->id,
                                     'hash' => $hash
                                 ]);
                             } else{
@@ -93,9 +93,9 @@ class User{
     }
 
     public function hasPermission($key){
-        $group = $this->_db->get('groups', ['id', '=', $this->data()->group]);
-        if($group->count()){
-            $permissions = json_decode($group->first()->permissions, true);
+        $role = $this->_db->get('roles', ['id', '=', $this->data()->roles]);
+        if($role->count()){
+            $permissions = json_decode($role->first()->permission, true);
             if($permissions[$key]){
                 return true;
             }
@@ -106,7 +106,7 @@ class User{
         return (!empty($this->data)) ? true : false;
     }
     public function logout(){
-        $this->_db->delete('users_session', ['user_id', '=', $this->data()->id]);
+        $this->_db->delete('users_session', ['users_id', '=', $this->data()->id]);
         Session::delete($this->_sessionName);
         Cookie::delete($this->_cookieName);
         Session::delete('success');
