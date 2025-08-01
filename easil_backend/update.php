@@ -28,7 +28,7 @@
                         try {
                             $user->update(['name' => Input::get('name')]);
                             Session::flash('home', 'Details Updated!');
-                            Redirect::to('index.php');
+                            Redirect::to('admin_dashboard.php');
                         } catch(Exception $e){
                             die($e->getMessage());
                         }

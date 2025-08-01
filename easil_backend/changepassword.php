@@ -12,7 +12,7 @@
 
     $user = new User();
     if(!$user->isLoggedIn()){
-        Redirect::to('index.php');
+        Redirect::to('admin_dashboard.php');
     }
     if(Input::exists()){
         if(Token::check(Input::get('token'))){
@@ -42,7 +42,7 @@
                         'salt' => $salt
                     ]);
                     Session::flash('home', 'Password updated!');
-                    Redirect::to('index.php');
+                    Redirect::to('admin_dashboard.php');
                 }
             }else{
                 foreach($validation->errors() as $error){

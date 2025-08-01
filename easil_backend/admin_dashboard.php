@@ -6,7 +6,7 @@
     <title>Home</title>
 </head>
 <body> 
-    <h1>This is index page</h1>   
+    <h1>This is student admin page</h1>   
     <?php
     require_once 'core/init.php'; 
    

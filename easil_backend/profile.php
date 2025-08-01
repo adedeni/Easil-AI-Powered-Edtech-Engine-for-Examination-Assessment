@@ -11,7 +11,7 @@
     require_once 'core/init.php';
 
     if (!$username = Input::get('user')){
-        Redirect::to('index.php');
+        Redirect::to('admin_dashboard.php');
     } else {
         $user = new User($username);
         if(!$user->exists()){

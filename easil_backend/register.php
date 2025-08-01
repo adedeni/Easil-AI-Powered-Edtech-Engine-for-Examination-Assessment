@@ -44,14 +44,14 @@ ini_set('display_errors', 1);
                     'password' => Hash::make(Input::get('password'), $salt),
                     'salt' => $salt,
                     'created_at' => date('Y-m-d H:i:s'),
-                    'roles' => 1
+                    'roles' => 0
                 ];
                 
                 
                 $created = $user->create($userData);
                 
                     Session::flash('success', 'You have registered successfully');
-                    Redirect::to('index.php');
+                    Redirect::to('admin_dashboard.php');
                 
             } catch(Exception $e) {
                 echo "Registration failed: " . $e->getMessage() . "<br>";

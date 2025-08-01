@@ -24,7 +24,7 @@
                 $login = $user->login(Input::get('username'), Input::get('password'), $remember);
                 if($login){
                     Session::flash('success', 'You have been logged in');
-                    Redirect::to('index.php');
+                    Redirect::to('admin_dashboard.php');
                     
                 }else{
                     echo "Login failed";
