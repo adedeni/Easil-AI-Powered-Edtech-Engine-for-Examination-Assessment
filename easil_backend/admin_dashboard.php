@@ -6,18 +6,14 @@
     <title>Home</title>
 </head>
 <body> 
-    <h1>This is student admin page</h1>   
+    <h1>This is Easil Admin Dashboard</h1>   
     <?php
     require_once 'core/init.php'; 
-   
-        
-
-
+    require_once 'classes/Guard.php';
+    $user = Guard::requireAdmin();
         if(Session::exists('success')){
             echo Session::flash('success');
         }
-        $user = new User();
-        if($user->isLoggedIn()){
             ?>
             <p>Welcome, <?php echo $user->data()->username; ?>!</p>
             <ul>
@@ -25,21 +21,7 @@
             <li><a href="update.php">Update Profile</a></li>
             <li><a href="changepassword.php">Change Password</a></li>
                 <li><a href="logout.php">Logout</a></li>
+                <li><a href="admin_users.php">Manage Users</a></li>
             </ul>
-            <?php
-            if($user->hasPermission('moderator')){
-                echo 'You are a moderator' . "!";
-            } else {
-                echo 'You are not a moderator'. "!";
-            }
-        }else{
-            ?>
-            <ul>
-                <li><a href="logout.php">Logout</a></li>
-            </ul>
-            <?php
-        } 
-    ?>
-
 </body>
 </html>

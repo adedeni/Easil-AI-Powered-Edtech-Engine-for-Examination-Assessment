@@ -23,9 +23,33 @@
                 $remember = (Input::get('remember') === 'on') ? true : false; 
                 $login = $user->login(Input::get('username'), Input::get('password'), $remember);
                 if($login){
-                    Session::flash('success', 'You have been logged in');
-                    Redirect::to('admin_dashboard.php');
-                    
+                    // Ensure account is active
+                    if (isset($user->data()->status) && $user->data()->status !== 'active') {
+                        echo 'Account is inactive.';
+                    } else if (isset($user->data()->force_password_change) && (int)$user->data()->force_password_change === 1) {
+                        Redirect::to('changepassword.php');
+                    } else {
+                        // Determine role id from either role_id or roles
+                        $roleId = null;
+                        if (isset($user->data()->role_id)) {
+                            $roleId = (int)$user->data()->role_id;
+                        } elseif (isset($user->data()->roles)) {
+                            $roleId = (int)$user->data()->roles;
+                        }
+                        // Redirect based on role
+                        if ($roleId === 3) {
+                            // Super admin route for id=1
+                            if ((int)$user->data()->id === 1) {
+                                Redirect::to('super_admin_dashboard.php');
+                            } else {
+                                Redirect::to('admin_dashboard.php');
+                            }
+                        } elseif ($roleId === 2) {
+                            Redirect::to('lecturer_dashboard.php');
+                        } else {
+                            Redirect::to('student_dashboard.php');
+                        }
+                    }
                 }else{
                     echo "Login failed";
                 }
@@ -59,6 +83,6 @@
        <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
        <input type="submit" name="login" value="Log in">
     </form> <br>
-    <a href="register.php">Register</a>
+    <!-- Registration disabled -->
 </body>
 </html>
