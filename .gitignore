@@ -1,0 +1,6 @@
+# Ignore these files in root
+easil.spl
+username roles and passwords.txt
+
+# Ignore specific file inside easil_backend/core
+easil_backend/core/init.php
