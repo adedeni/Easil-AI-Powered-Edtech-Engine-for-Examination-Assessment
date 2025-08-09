@@ -27,13 +27,20 @@ The EdTech Examination Management Platform is designed to streamline the examina
 - Create assessments manually or using LLM assistance
 - Modify and delete upcoming assessments
 - Manage student enrollment for courses
-- Add new students and assign assessments
+- Assign assessments
 - Manage courses (add, delete, activate/deactivate)
 - View grades and performance analytics
 
 #### Administrators
 - Access comprehensive system analytics
 - Manage lecturers and students
+- Oversee course management
+- Generate reports and insights
+- Control user access and permissions
+
+#### Super Administrators
+- Access comprehensive system analytics
+- Manage lecturers and students, and other administrators
 - Oversee course management
 - Generate reports and insights
 - Control user access and permissions
@@ -157,7 +164,7 @@ The EdTech Examination Management Platform is designed to streamline the examina
 3. Configure AI grading parameters
 4. Test integration with sample assessments
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 - Database connection details
