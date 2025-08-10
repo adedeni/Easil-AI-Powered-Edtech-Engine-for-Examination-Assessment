@@ -15,10 +15,11 @@ $db = DB::getInstance();
 $successMessage = '';
 $errorMessage = '';
 
-
 include '../../app/Core/constants.php';
 
-if (!class_exists('Audit')) { require_once '../../app/Classes/Audit.php'; }
+if (!class_exists('Audit')) {
+  require_once '../../app/Classes/Audit.php';
+}
 
 // Handle actions (POST)
 if (Input::exists()) {
@@ -27,10 +28,10 @@ if (Input::exists()) {
     if (isset($_POST['action']) && $_POST['action'] === 'create') {
       $name = trim(Input::get('name'));
       $email = trim(Input::get('email'));
-      $new_role_id = (int)Input::get('role_id');
+      $new_role_id = (int) Input::get('role_id');
       $ident = trim(Input::get('identification_number'));
 
-      $isCurrentSuper = ((int)$user->data()->id === $SUPER_ADMIN_ID);
+      $isCurrentSuper = ((int) $user->data()->id === $SUPER_ADMIN_ID);
       if ($new_role_id === 3 && !$isCurrentSuper) {
         $errorMessage = 'Only the Super Admin can create administrator accounts.';
       } else if ($name && $new_role_id && $ident) {
@@ -61,20 +62,19 @@ if (Input::exists()) {
             ]);
             if ($created) {
               $newUserId = $db->query('SELECT LAST_INSERT_ID() AS id')->first()->id ?? null;
-              Audit::log((int)$user->data()->id, 'create_user', $newUserId ? (int)$newUserId : null, [
+              Audit::log((int) $user->data()->id, 'create_user', $newUserId ? (int) $newUserId : null, [
                 'name' => $name,
                 'role_id' => $new_role_id,
                 'identification_number' => $ident
               ]);
               $successMessage = 'User created successfully. TEMP PASSWORD: ' . htmlspecialchars($defaultPassword);
-              // Optional email notification
+              // NEW: Email notification for manual user creation
               if ($email) {
-                if (!class_exists('Email')) { require_once '../../app/Classes/Email.php'; }
-                $body = "Hello $name,\n\nYour account has been created.\nUsername: $username\nTemporary Password: $defaultPassword\nPlease log in and change your password immediately.";
-                if (Email::send($email, 'Your EASIL account', $body)) {
+                $emailHandler = new Email();
+                if ($emailHandler->sendWelcomeEmail($email, $name, $username, $defaultPassword)) {
                   $successMessage .= ' (Notification email sent)';
                 } else {
-                  $successMessage .= ' (Email notification not configured)';
+                  $successMessage .= ' (Email notification failed)';
                 }
               }
             } else {
@@ -93,7 +93,7 @@ if (Input::exists()) {
 
     // Toggle status
     if (isset($_POST['action']) && $_POST['action'] === 'toggle_status') {
-      $targetId = (int)Input::get('user_id');
+      $targetId = (int) Input::get('user_id');
       if ($targetId) {
         if ($targetId === $SUPER_ADMIN_ID) {
           $errorMessage = 'The Super Admin account is protected and cannot be deactivated.';
@@ -106,7 +106,7 @@ if (Input::exists()) {
             if ($newStatus === 'inactive') {
               $db->delete('users_session', ['users_id', '=', $targetId]);
             }
-            Audit::log((int)$user->data()->id, 'toggle_status', $targetId, ['new_status' => $newStatus]);
+            Audit::log((int) $user->data()->id, 'toggle_status', $targetId, ['new_status' => $newStatus]);
             $successMessage = 'User status updated to ' . $newStatus;
           } else {
             $errorMessage = 'User not found.';
@@ -117,9 +117,9 @@ if (Input::exists()) {
       }
     }
 
-    // Reset password (append optional email)
+    // Reset password (append email)
     if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
-      $targetId = (int)Input::get('user_id');
+      $targetId = (int) Input::get('user_id');
       if ($targetId) {
         if ($targetId === $SUPER_ADMIN_ID) {
           $errorMessage = 'The Super Admin password cannot be reset from this page.';
@@ -135,15 +135,14 @@ if (Input::exists()) {
               'force_password_change' => 1
             ], $targetId);
             $db->delete('users_session', ['users_id', '=', $targetId]);
-            Audit::log((int)$user->data()->id, 'reset_password', $targetId);
+            Audit::log((int) $user->data()->id, 'reset_password', $targetId);
             $successMessage = 'Password reset. TEMP PASSWORD: ' . htmlspecialchars($newPwd);
             if (!empty($target->email)) {
-              if (!class_exists('Email')) { require_once '../../app/Classes/Email.php'; }
-              $body = "Hello $target->name,\n\nYour password has been reset by an administrator.\nTemporary Password: $newPwd\nPlease log in and change your password immediately.";
-              if (Email::send($target->email, 'Password reset', $body)) {
+              $emailHandler = new Email();
+              if ($emailHandler->sendPasswordResetEmail($target->email, $target->name, $newPwd)) {
                 $successMessage .= ' (Notification email sent)';
               } else {
-                $successMessage .= ' (Email notification not configured)';
+                $successMessage .= ' (Email notification failed)';
               }
             }
           }
@@ -155,14 +154,14 @@ if (Input::exists()) {
 
     // Edit user (name/email)
     if (isset($_POST['action']) && $_POST['action'] === 'edit_user') {
-      $targetId = (int)Input::get('user_id');
+      $targetId = (int) Input::get('user_id');
       $name = trim(Input::get('edit_name'));
       $email = trim(Input::get('edit_email'));
       if ($targetId && $name) {
         try {
           $updateFields = ['name' => $name, 'email' => $email ?: null];
           $user->update($updateFields, $targetId);
-          Audit::log((int)$user->data()->id, 'edit_user', $targetId, $updateFields);
+          Audit::log((int) $user->data()->id, 'edit_user', $targetId, $updateFields);
           $successMessage = 'User details updated.';
         } catch (Exception $e) {
           $errorMessage = 'Failed to update user: ' . htmlspecialchars($e->getMessage());
@@ -174,7 +173,7 @@ if (Input::exists()) {
 
     // Unlock account
     if (isset($_POST['action']) && $_POST['action'] === 'unlock_user') {
-      $targetId = (int)Input::get('user_id');
+      $targetId = (int) Input::get('user_id');
       if ($targetId) {
         if ($targetId === $SUPER_ADMIN_ID) {
           $errorMessage = 'The Super Admin account cannot be unlocked here.';
@@ -184,7 +183,7 @@ if (Input::exists()) {
               'failed_login_attempts' => 0,
               'lock_until' => null,
             ], $targetId);
-            Audit::log((int)$user->data()->id, 'unlock_user', $targetId);
+            Audit::log((int) $user->data()->id, 'unlock_user', $targetId);
             $successMessage = 'User account unlocked.';
           } catch (Exception $e) {
             $errorMessage = 'Failed to unlock account: ' . htmlspecialchars($e->getMessage());
@@ -197,11 +196,11 @@ if (Input::exists()) {
 
     // Import CSV (students/lecturers)
     if (isset($_POST['action']) && $_POST['action'] === 'import_csv') {
-      $import_role_id = (int)Input::get('import_role_id');
+      $import_role_id = (int) Input::get('import_role_id');
       $doCommit = (Input::get('commit') === '1');
 
       // Only allow students (1) or lecturers (2)
-      if (!in_array($import_role_id, [1,2], true)) {
+      if (!in_array($import_role_id, [1, 2], true)) {
         $errorMessage = 'Only students or lecturers can be imported.';
       } else if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
         $errorMessage = 'CSV file upload failed.';
@@ -222,7 +221,9 @@ if (Input::exists()) {
               continue;
             }
             $row = array_combine($headers, $data);
-            if ($row === false) { continue; }
+            if ($row === false) {
+              continue;
+            }
             $rows[] = $row;
           }
           fclose($handle);
@@ -231,7 +232,7 @@ if (Input::exists()) {
           $validRows = [];
           $created = [];
           foreach ($rows as $idx => $r) {
-            $rowNum = $idx + 2; // account for header row
+            $rowNum = $idx + 2;  // account for header row
             $name = isset($r['name']) ? trim($r['name']) : '';
             $ident = isset($r['identification_number']) ? trim($r['identification_number']) : '';
             $email = isset($r['email']) ? trim($r['email']) : '';
@@ -245,18 +246,18 @@ if (Input::exists()) {
             // Uniqueness checks
             $existsUser = $db->query('SELECT id FROM users WHERE username = ? LIMIT 1', [$username])->count() > 0;
             if ($existsUser) {
-              $errors[] = "Row {$rowNum}: Username already exists (".htmlspecialchars($username).").";
+              $errors[] = "Row {$rowNum}: Username already exists (" . htmlspecialchars($username) . ').';
               continue;
             }
             $existsRoleIdent = $db->query('SELECT id FROM users WHERE role_id = ? AND identification_number = ? LIMIT 1', [$import_role_id, $ident])->count() > 0;
             if ($existsRoleIdent) {
-              $errors[] = "Row {$rowNum}: Identification already exists for this role (".htmlspecialchars($ident).").";
+              $errors[] = "Row {$rowNum}: Identification already exists for this role (" . htmlspecialchars($ident) . ').';
               continue;
             }
             if ($email !== '') {
               $existsEmail = $db->query('SELECT id FROM users WHERE email = ? LIMIT 1', [$email])->count() > 0;
               if ($existsEmail) {
-                $errors[] = "Row {$rowNum}: Email already exists (".htmlspecialchars($email).").";
+                $errors[] = "Row {$rowNum}: Email already exists (" . htmlspecialchars($email) . ').';
                 continue;
               }
             }
@@ -272,9 +273,9 @@ if (Input::exists()) {
           if (!$doCommit) {
             // Dry-run summary
             if (count($errors)) {
-              $errorMessage = 'Dry-run: Found '.count($errors).' issue(s). Please fix and retry.';
+              $errorMessage = 'Dry-run: Found ' . count($errors) . ' issue(s). Please fix and retry.';
             } else {
-              $successMessage = 'Dry-run passed. '.count($validRows).' row(s) ready to import.';
+              $successMessage = 'Dry-run passed. ' . count($validRows) . ' row(s) ready to import.';
             }
           } else {
             if (count($errors)) {
@@ -298,7 +299,7 @@ if (Input::exists()) {
                   'status' => 'active'
                 ]);
                 if ($ok) {
-                  Audit::log((int)$user->data()->id, 'import_create_user', null, [
+                  Audit::log((int) $user->data()->id, 'import_create_user', null, [
                     'name' => $vr['name'],
                     'role_id' => $vr['role_id'],
                     'identification_number' => $vr['identification_number']
@@ -311,9 +312,16 @@ if (Input::exists()) {
                     'identification_number' => $vr['identification_number'],
                     'temp_password' => $tempPwd,
                   ];
+                  // NEW: Send welcome email to imported users
+                  if ($vr['email']) {
+                    $emailHandler->sendWelcomeEmail($vr['email'], $vr['name'], $vr['username'], $tempPwd);
+                  }
                 }
               }
-              $successMessage = 'Import complete. Created '.count($created).' user(s).';
+              $successMessage = 'Import complete. Created ' . count($created) . ' user(s).';
+              if (count($created) > 0) {
+                $successMessage .= ' (Welcome emails sent to users with an email address)';
+              }
             }
           }
 
@@ -336,14 +344,20 @@ Session::delete('import_errors');
 Session::delete('import_created');
 
 // Filters (GET)
-$filterRoleId = (int)Input::get('role_filter');
+$filterRoleId = (int) Input::get('role_filter');
 $filterStatus = trim(Input::get('status_filter'));
 $q = trim(Input::get('q'));
-$page = (int)Input::get('page');
-if ($page < 1) { $page = 1; }
-$perPage = (int)Input::get('per_page');
-if ($perPage < 1) { $perPage = 10; }
-if ($perPage > 100) { $perPage = 100; }
+$page = (int) Input::get('page');
+if ($page < 1) {
+  $page = 1;
+}
+$perPage = (int) Input::get('per_page');
+if ($perPage < 1) {
+  $perPage = 10;
+}
+if ($perPage > 100) {
+  $perPage = 100;
+}
 $offset = ($page - 1) * $perPage;
 
 // Fetch roles for filters and create form
@@ -352,28 +366,38 @@ $roles = $db->query('SELECT id, name FROM roles')->results();
 // Build WHERE clause
 $whereClauses = [];
 $params = [];
-if ($filterRoleId > 0) { $whereClauses[] = 'u.role_id = ?'; $params[] = $filterRoleId; }
-if ($filterStatus === 'active' || $filterStatus === 'inactive') { $whereClauses[] = 'u.status = ?'; $params[] = $filterStatus; }
+if ($filterRoleId > 0) {
+  $whereClauses[] = 'u.role_id = ?';
+  $params[] = $filterRoleId;
+}
+if ($filterStatus === 'active' || $filterStatus === 'inactive') {
+  $whereClauses[] = 'u.status = ?';
+  $params[] = $filterStatus;
+}
 if ($q !== '') {
   $whereClauses[] = '(u.username LIKE ? OR u.name LIKE ? OR u.email LIKE ? OR u.identification_number LIKE ?)';
-  $like = '%'.$q.'%';
+  $like = '%' . $q . '%';
   array_push($params, $like, $like, $like, $like);
 }
-$whereSql = count($whereClauses) ? ('WHERE '.implode(' AND ', $whereClauses)) : '';
+$whereSql = count($whereClauses) ? ('WHERE ' . implode(' AND ', $whereClauses)) : '';
 
 // Count total for pagination
-$countSql = 'SELECT COUNT(*) AS total FROM users u '.$whereSql;
+$countSql = 'SELECT COUNT(*) AS total FROM users u ' . $whereSql;
 $totalRow = $db->query($countSql, $params)->first();
-$total = (int)$totalRow->total;
-$totalPages = $total > 0 ? (int)ceil($total / $perPage) : 1;
-if ($page > $totalPages) { $page = $totalPages; $offset = ($page - 1) * $perPage; }
+$total = (int) $totalRow->total;
+$totalPages = $total > 0 ? (int) ceil($total / $perPage) : 1;
+if ($page > $totalPages) {
+  $page = $totalPages;
+  $offset = ($page - 1) * $perPage;
+}
 
 // Fetch users with filters and pagination
-$dataSql = 'SELECT u.*, r.name AS role_name FROM users u JOIN roles r ON r.id = u.role_id '.$whereSql.' ORDER BY u.created_at DESC LIMIT '.$perPage.' OFFSET '.$offset;
+$dataSql = 'SELECT u.*, r.name AS role_name FROM users u JOIN roles r ON r.id = u.role_id ' . $whereSql . ' ORDER BY u.created_at DESC LIMIT ' . $perPage . ' OFFSET ' . $offset;
 $users = $db->query($dataSql, $params)->results();
 
 // Helper to preserve query params
-function buildQuery($overrides = []) {
+function buildQuery($overrides = [])
+{
   $base = [
     'role_filter' => Input::get('role_filter'),
     'status_filter' => Input::get('status_filter'),
@@ -383,10 +407,11 @@ function buildQuery($overrides = []) {
   $all = array_merge($base, $overrides);
   $pairs = [];
   foreach ($all as $k => $v) {
-    if ($v === '' || $v === null) continue;
-    $pairs[] = urlencode($k).'='.urlencode($v);
+    if ($v === '' || $v === null)
+      continue;
+    $pairs[] = urlencode($k) . '=' . urlencode($v);
   }
-  return count($pairs) ? ('?'.implode('&', $pairs)) : '';
+  return count($pairs) ? ('?' . implode('&', $pairs)) : '';
 }
 ?>
 <h1>Manage Users</h1>
@@ -405,7 +430,7 @@ function buildQuery($overrides = []) {
     <select name="role_filter">
       <option value="">All</option>
       <?php foreach ($roles as $r): ?>
-        <option value="<?php echo (int)$r->id; ?>" <?php echo ($filterRoleId === (int)$r->id) ? 'selected' : ''; ?>><?php echo htmlspecialchars($r->name); ?></option>
+        <option value="<?php echo (int) $r->id; ?>" <?php echo ($filterRoleId === (int) $r->id) ? 'selected' : ''; ?>><?php echo htmlspecialchars($r->name); ?></option>
       <?php endforeach; ?>
     </select>
     <label>Status</label>
@@ -418,7 +443,7 @@ function buildQuery($overrides = []) {
     <input type="text" name="q" value="<?php echo htmlspecialchars($q); ?>" placeholder="name/username/email/ID">
     <label>Per Page</label>
     <select name="per_page">
-      <?php foreach ([10,25,50,100] as $pp): ?>
+      <?php foreach ([10, 25, 50, 100] as $pp): ?>
         <option value="<?php echo $pp; ?>" <?php echo ($perPage === $pp) ? 'selected' : ''; ?>><?php echo $pp; ?></option>
       <?php endforeach; ?>
     </select>
@@ -443,8 +468,8 @@ function buildQuery($overrides = []) {
     <select name="role_id" required>
       <option value="">Select role</option>
       <?php foreach ($roles as $r): ?>
-        <?php if ((int)$r->id === 3 && (int)$user->data()->id !== $SUPER_ADMIN_ID) continue; ?>
-        <option value="<?php echo (int)$r->id; ?>"><?php echo htmlspecialchars($r->name); ?></option>
+        <?php if ((int) $r->id === 3 && (int) $user->data()->id !== $SUPER_ADMIN_ID) continue; ?>
+        <option value="<?php echo (int) $r->id; ?>"><?php echo htmlspecialchars($r->name); ?></option>
       <?php endforeach; ?>
     </select>
   </div>
@@ -510,7 +535,7 @@ function buildQuery($overrides = []) {
             <td><?php echo htmlspecialchars($c['username']); ?></td>
             <td><?php echo htmlspecialchars($c['name']); ?></td>
             <td><?php echo htmlspecialchars($c['email']); ?></td>
-            <td><?php echo (int)$c['role_id']; ?></td>
+            <td><?php echo (int) $c['role_id']; ?></td>
             <td><?php echo htmlspecialchars($c['identification_number']); ?></td>
             <td><?php echo htmlspecialchars($c['temp_password']); ?></td>
           </tr>
@@ -522,22 +547,30 @@ function buildQuery($overrides = []) {
 
 <?php
 // Edit form (GET ?edit=ID)
-$editId = (int)Input::get('edit');
+$editId = (int) Input::get('edit');
 $editRow = null;
 if ($editId) {
-  foreach ($users as $uRow) { if ((int)$uRow->id === $editId) { $editRow = $uRow; break; } }
+  foreach ($users as $uRow) {
+    if ((int) $uRow->id === $editId) {
+      $editRow = $uRow;
+      break;
+    }
+  }
   if (!$editRow) {
     // fetch directly if not in current page
     $res = $db->get('users', ['id', '=', $editId]);
-    if ($res->count()) { $editRow = $res->first(); }
+    if ($res->count()) {
+      $editRow = $res->first();
+    }
   }
 }
-if ($editRow): ?>
+if ($editRow):
+?>
 <h2>Edit User</h2>
 <form method="post" style="margin-bottom: 16px;">
   <input type="hidden" name="token" value="<?php echo $formToken; ?>">
   <input type="hidden" name="action" value="edit_user">
-  <input type="hidden" name="user_id" value="<?php echo (int)$editRow->id; ?>">
+  <input type="hidden" name="user_id" value="<?php echo (int) $editRow->id; ?>">
   <div>
     <label>Name</label>
     <input type="text" name="edit_name" value="<?php echo htmlspecialchars($editRow->name); ?>" required>
@@ -561,7 +594,7 @@ if ($editRow): ?>
   <tbody>
     <?php foreach ($users as $u): ?>
       <tr>
-        <td><?php echo (int)$u->id; ?></td>
+        <td><?php echo (int) $u->id; ?></td>
         <td><?php echo htmlspecialchars($u->username); ?></td>
         <td><?php echo htmlspecialchars($u->name); ?></td>
         <td><?php echo htmlspecialchars($u->email); ?></td>
@@ -574,27 +607,27 @@ if ($editRow): ?>
           <?php endif; ?>
         </td>
         <td>
-          <a href="admin_users.php<?php echo buildQuery(['edit' => (int)$u->id]); ?>" style="margin-right:8px;">Edit</a>
-          <?php if ((int)$u->id === $SUPER_ADMIN_ID): ?>
+          <a href="admin_users.php<?php echo buildQuery(['edit' => (int) $u->id]); ?>" style="margin-right:8px;">Edit</a>
+          <?php if ((int) $u->id === $SUPER_ADMIN_ID): ?>
             <em>Protected</em>
           <?php else: ?>
             <form method="post" style="display:inline-block; margin-right:8px;">
               <input type="hidden" name="token" value="<?php echo $formToken; ?>">
               <input type="hidden" name="action" value="toggle_status">
-              <input type="hidden" name="user_id" value="<?php echo (int)$u->id; ?>">
+              <input type="hidden" name="user_id" value="<?php echo (int) $u->id; ?>">
               <button type="submit"><?php echo ($u->status === 'active') ? 'Deactivate' : 'Activate'; ?></button>
             </form>
             <form method="post" style="display:inline-block; margin-right:8px;">
               <input type="hidden" name="token" value="<?php echo $formToken; ?>">
               <input type="hidden" name="action" value="reset_password">
-              <input type="hidden" name="user_id" value="<?php echo (int)$u->id; ?>">
+              <input type="hidden" name="user_id" value="<?php echo (int) $u->id; ?>">
               <button type="submit">Reset Password</button>
             </form>
-            <?php if ((int)$u->failed_login_attempts > 0 || (!empty($u->lock_until) && strtotime($u->lock_until) > time())): ?>
+            <?php if ((int) $u->failed_login_attempts > 0 || (!empty($u->lock_until) && strtotime($u->lock_until) > time())): ?>
               <form method="post" style="display:inline-block;">
                 <input type="hidden" name="token" value="<?php echo $formToken; ?>">
                 <input type="hidden" name="action" value="unlock_user">
-                <input type="hidden" name="user_id" value="<?php echo (int)$u->id; ?>">
+                <input type="hidden" name="user_id" value="<?php echo (int) $u->id; ?>">
                 <button type="submit">Unlock</button>
               </form>
             <?php endif; ?>
@@ -615,6 +648,6 @@ if ($editRow): ?>
   <?php endif; ?>
 </div>
 
-<p><a href="<?php echo ((int)$user->data()->id === $SUPER_ADMIN_ID) ? 'super_admin_dashboard.php' : 'admin_dashboard.php'; ?>">Back to Dashboard</a></p>
+<p><a href="<?php echo ((int) $user->data()->id === $SUPER_ADMIN_ID) ? 'super_admin_dashboard.php' : 'admin_dashboard.php'; ?>">Back to Dashboard</a></p>
 </body>
 </html>

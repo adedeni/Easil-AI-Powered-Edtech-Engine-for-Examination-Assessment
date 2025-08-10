@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 09, 2025 at 01:16 PM
+-- Generation Time: Aug 11, 2025 at 12:01 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -91,6 +91,17 @@ CREATE TABLE `audit_logs` (
   `details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`details`)),
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `audit_logs`
+--
+
+INSERT INTO `audit_logs` (`id`, `actor_user_id`, `action`, `target_user_id`, `details`, `created_at`) VALUES
+(1, 1, 'toggle_status', 2, '{\"new_status\":\"inactive\"}', '2025-08-10 09:11:27'),
+(2, 1, 'toggle_status', 2, '{\"new_status\":\"active\"}', '2025-08-10 09:11:34'),
+(3, 1, 'create_user', 5, '{\"name\":\"Rasheed Korede\",\"role_id\":3,\"identification_number\":\"ADMIN0003\"}', '2025-08-10 18:17:28'),
+(4, 1, 'toggle_status', 5, '{\"new_status\":\"inactive\"}', '2025-08-10 18:24:31'),
+(5, 1, 'toggle_status', 5, '{\"new_status\":\"active\"}', '2025-08-10 18:24:33');
 
 -- --------------------------------------------------------
 
@@ -199,9 +210,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `salt`, `name`, `email`, `role_id`, `identification_number`, `created_at`, `updated_at`, `force_password_change`, `status`, `failed_login_attempts`, `lock_until`, `last_password_change`) VALUES
 (1, 'adedeni', '5f3337099bebabb53f37ec76d8ba638fb90d5a2a58603881a94a4aaeb48ff7fd', '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'Olayode Adeshina', 'adeshinaolayodemubaraq@gmail.com', 3, 'ADMIN0001', '2025-08-09 07:04:07', '2025-08-09 07:38:49', 0, 'active', 0, NULL, '2025-08-09 08:38:49'),
-(2, 'ADMIN0002', '21b37ddd441703b47d780d6776573b37197071776831ba85534bb9329b8167da', '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'Amadi Daniel', 'amadi@daniel.com', 3, 'ADMIN0002', '2025-08-09 09:00:09', '2025-08-09 08:44:19', 0, 'active', 0, NULL, '2025-08-09 09:16:52'),
+(2, 'ADMIN0002', '21b37ddd441703b47d780d6776573b37197071776831ba85534bb9329b8167da', '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'Amadi Daniel', 'amadi@daniel.com', 3, 'ADMIN0002', '2025-08-09 09:00:09', '2025-08-10 07:11:34', 0, 'active', 0, NULL, '2025-08-09 09:16:52'),
 (3, 'LECTURER0001', '98886cb88b1d344bd30198ecd52a31cf91d93798f070a90ea904d1c44b42c9e5', '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'Adeniji Mayokun', 'adeniji@mayokun', 2, 'LECTURER0001', '2025-08-09 09:02:55', '2025-08-09 08:12:49', 0, 'active', 0, NULL, '2025-08-09 09:11:59'),
-(4, 'STUDENT0001', '8d07a1e68d3fa8780569fab1a204d2c4578aa33b9d123f661f6ac5e1ad79a4ed', '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'Omotosho Bolu', 'omotosho@bolu.com', 1, 'STUDENT0001', '2025-08-09 09:04:36', '2025-08-09 08:14:54', 0, 'active', 0, NULL, '2025-08-09 09:14:12');
+(4, 'STUDENT0001', '8d07a1e68d3fa8780569fab1a204d2c4578aa33b9d123f661f6ac5e1ad79a4ed', '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'Omotosho Bolu', 'omotosho@bolu.com', 1, 'STUDENT0001', '2025-08-09 09:04:36', '2025-08-09 08:14:54', 0, 'active', 0, NULL, '2025-08-09 09:14:12'),
+(5, 'ADMIN0003', 'b5d3f49faeefbb4a502d1444a39cddbe0be80713a7e109a4f709a513fe2946a6', '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'Rasheed Korede', 'rasheed@korede.com', 3, 'ADMIN0003', '2025-08-10 17:17:28', '2025-08-10 16:24:33', 1, 'active', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -221,7 +233,8 @@ CREATE TABLE `users_session` (
 --
 
 INSERT INTO `users_session` (`id`, `users_id`, `hash`, `created_at`) VALUES
-(15, 1, 'f3aa91c80a6f9d1b1f69b6a01fbba9775537b408ee547d1be78aa8259c57713f', '2025-08-09 09:06:16');
+(17, 3, '3469db16495a6d508c2c42548d4172e34a8b656614c789489516771d2feb9d11', '2025-08-10 14:25:46'),
+(18, 4, '038f29840d58adcd8d1b8b5464a39d4069fdfbc8bbc2f38c116e94df3e91f7c0', '2025-08-10 14:27:24');
 
 --
 -- Indexes for dumped tables
@@ -346,7 +359,7 @@ ALTER TABLE `assessment_attempts`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -382,13 +395,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users_session`
 --
 ALTER TABLE `users_session`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables

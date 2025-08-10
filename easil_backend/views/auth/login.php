@@ -77,6 +77,20 @@
         <label for="password">Password</label>
         <input type="password" name="password" id="password" placeholder="Enter your password" required autocomplete="off">
        </div> <br>
+       <?php 
+       // Check if CAPTCHA should be displayed
+       $showCaptcha = false;
+       if (isset($user) && $user->data()->failed_login_attempts >= Config::get('captcha/failed_login_attempts_before_captcha')) {
+           $showCaptcha = true;
+       }
+       if ($showCaptcha) {
+       ?>
+       <div class="field">
+           <img src="../assets/captcha.php" alt="CAPTCHA image">
+           <label for="captcha">Enter the text from the image</label>
+           <input type="text" name="captcha" id="captcha" required>
+       </div> <br>
+       <?php } ?>
        <div class="field">
        <label for="remember">
         <input type="checkbox" name="remember" id="remember"><span>   </span>Remember me

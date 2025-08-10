@@ -95,80 +95,99 @@ class User
 
     public function login($username = null, $password = null, $remember = false)
     {
-
+        // Check if user is already logged in (e.g., via session)
         if (!$username && !$password && $this->exists()) {
             Session::put($this->_sessionName, $this->data()->id);
             $rid = $this->resolveRoleId();
             if ($rid !== null) {
                 Session::put('user_role_id', $rid);
             }
-        } else {
-            $user = $this->find($username);
-
-            if ($user) {
-                // Enforce active status
-                if (isset($this->data()->status) && $this->data()->status !== 'active') {
-                    return false;
+            return true;
+        }
+    
+        // Find the user by username
+        $user = $this->find($username);
+    
+        // If user is found, proceed with validation
+        if ($user) {
+            // Check for inactive status
+            if (isset($this->data()->status) && $this->data()->status !== 'active') {
+                return false;
+            }
+            
+            // Check for an active lockout
+            if ($this->isCurrentlyLocked()) {
+                return false;
+            }
+    
+            // Successful login
+            if ($this->data()->password === Hash::make($password, $this->data()->salt)) {
+                // Reset failed attempts and lock_until on successful login
+                $resetFields = [];
+                if (property_exists($this->data(), 'failed_login_attempts')) {
+                    $resetFields['failed_login_attempts'] = 0;
                 }
-                // Enforce lockout if in effect
-                if ($this->isCurrentlyLocked()) {
-                    return false;
+                if (property_exists($this->data(), 'lock_until')) {
+                    $resetFields['lock_until'] = null;
                 }
-                if ($this->data()->password === Hash::make($password, $this->data()->salt)) {
-                    // Reset failed attempts and lock
-                    $resetFields = [];
-                    if (property_exists($this->data(), 'failed_login_attempts')) {
-                        $resetFields['failed_login_attempts'] = 0;
-                    }
-                    if (property_exists($this->data(), 'lock_until')) {
-                        $resetFields['lock_until'] = null;
-                    }
-                    if (!empty($resetFields)) {
-                        try {
-                            $this->_db->update('users', $this->data()->id, $resetFields);
-                        } catch (Exception $e) {
-                        }
-                    }
-
-                    Session::put($this->_sessionName, $this->data()->id);
-                    $rid = $this->resolveRoleId();
-                    if ($rid !== null) {
-                        Session::put('user_role_id', $rid);
-                    }
-
-                    if ($remember) {
-                        $hash = Hash::unique();
-                        $hashCheck = $this->_db->get('users_session', ['users_id', '=', $this->data()->id]);
-                        if (!$hashCheck->count()) {
-                            $this->_db->insert('users_session', [
-                                'users_id' => $this->data()->id,
-                                'hash' => $hash
-                            ]);
-                        } else {
-                            $hash = $hashCheck->first()->hash;
-                        }
-                        Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
-                    }
-                    return true;
-                } else {
-                    // Failed login: increment attempts and maybe lock
-                    $failed = 0;
-                    if (isset($this->data()->failed_login_attempts)) {
-                        $failed = (int)$this->data()->failed_login_attempts;
-                    }
-                    $failed++;
-                    $update = ['failed_login_attempts' => $failed];
-                    if ($failed >= $this->maxFailedAttempts) {
-                        $lockUntil = (new DateTimeImmutable('now'))->modify('+' . $this->lockMinutes . ' minutes');
-                        $update['lock_until'] = $lockUntil->format('Y-m-d H:i:s');
-                    }
+                if (!empty($resetFields)) {
                     try {
-                        $this->_db->update('users', $this->data()->id, $update);
+                        $this->_db->update('users', $this->data()->id, $resetFields);
                     } catch (Exception $e) {
+                        // Log or handle this exception silently as it shouldn't block the login
                     }
+                }
+    
+                // Set session and role ID
+                Session::put($this->_sessionName, $this->data()->id);
+                $rid = $this->resolveRoleId();
+                if ($rid !== null) {
+                    Session::put('user_role_id', $rid);
+                }
+    
+                // Handle "remember me" functionality
+                if ($remember) {
+                    $hash = Hash::unique();
+                    $hashCheck = $this->_db->get('users_session', ['users_id', '=', $this->data()->id]);
+                    if (!$hashCheck->count()) {
+                        $this->_db->insert('users_session', [
+                            'users_id' => $this->data()->id,
+                            'hash' => $hash
+                        ]);
+                    } else {
+                        $hash = $hashCheck->first()->hash;
+                    }
+                    Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
+                }
+                return true;
+            }
+    
+            // Failed login attempt
+            else {
+                // Increment failed attempts and maybe lock the account
+                $failed = 0;
+                if (isset($this->data()->failed_login_attempts)) {
+                    $failed = (int)$this->data()->failed_login_attempts;
+                }
+                $failed++;
+                $update = ['failed_login_attempts' => $failed];
+    
+                // If max attempts reached, set the lock_until timestamp
+                if ($failed >= $this->maxFailedAttempts) {
+                    $lockUntil = (new DateTimeImmutable('now'))->modify('+' . $this->lockMinutes . ' minutes');
+                    $update['lock_until'] = $lockUntil->format('Y-m-d H:i:s');
+                }
+    
+                // Update the database
+                try {
+                    $this->_db->update('users', $this->data()->id, $update);
+                } catch (Exception $e) {
+                    // Log or handle this exception silently
                 }
             }
         }
+    
+        // Return false for any failure to find user or authenticate
         return false;
     }
 
