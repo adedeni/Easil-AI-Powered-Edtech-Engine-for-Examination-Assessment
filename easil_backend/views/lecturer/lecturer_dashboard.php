@@ -7,18 +7,18 @@
 </head>
 <body>
 <?php
-require_once 'core/init.php';
+require_once '../../app/Core/init.php';
 $user = new User();
 if(!$user->isLoggedIn()){
-    Redirect::to('login.php');
+    Redirect::to('../auth/login.php');
 }
 ?>
 <h1>Lecturer Dashboard</h1>
 <p>Welcome, <?php echo escape($user->data()->username); ?>!</p>
 <ul>
-    <li><a href="profile.php?user=<?php echo escape($user->data()->username);?>">Profile</a></li>
-    <li><a href="changepassword.php">Change Password</a></li>
-    <li><a href="logout.php">Logout</a></li>
+    <li><a href="../profile.php?user=<?php echo escape($user->data()->username);?>">Profile</a></li>
+    <li><a href="../auth/changepassword.php">Change Password</a></li>
+    <li><a href="../auth/logout.php">Logout</a></li>
 </ul>
 </body>
 </html>

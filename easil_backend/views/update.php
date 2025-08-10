@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +7,11 @@
 </head>
 <body>
     <?php
-        require_once 'core/init.php';
+        require_once '../app/Core/init.php';
 
         $user = new User();
         if(!$user->isLoggedIn()){
-            Redirect::to('login.php');
+            Redirect::to('auth/login.php');
         }
         if(Input::exists()) {
             if(Token::check(Input::get('token'))){
@@ -28,7 +27,7 @@
                         try {
                             $user->update(['name' => Input::get('name')]);
                             Session::flash('home', 'Details Updated!');
-                            Redirect::to('admin_dashboard.php');
+                            Redirect::to('admin/admin_dashboard.php');
                         } catch(Exception $e){
                             die($e->getMessage());
                         }

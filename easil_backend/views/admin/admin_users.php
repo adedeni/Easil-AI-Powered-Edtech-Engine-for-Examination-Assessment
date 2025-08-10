@@ -7,27 +7,18 @@
 </head>
 <body>
 <?php
-require_once 'core/init.php';
-require_once 'classes/Guard.php';
+require_once '../../app/Core/init.php';
+
 $user = Guard::requireAdmin();
 
 $db = DB::getInstance();
 $successMessage = '';
 $errorMessage = '';
 
-// Super admin constants (first admin)
-$SUPER_ADMIN_ID = 1;           // fixed id
-$SUPER_ADMIN_USERNAME = 'adedeni';
-$SUPER_ADMIN_IDENT = 'ADMIN0001';
 
-function generateRandomPassword($length = 12) {
-  $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@$!%*?&';
-  $pwd = '';
-  for ($i=0; $i<$length; $i++) { $pwd .= $chars[random_int(0, strlen($chars)-1)]; }
-  return $pwd;
-}
+include '../../app/Core/constants.php';
 
-if (!class_exists('Audit')) { require_once 'classes/Audit.php'; }
+if (!class_exists('Audit')) { require_once '../../app/Classes/Audit.php'; }
 
 // Handle actions (POST)
 if (Input::exists()) {
@@ -53,7 +44,7 @@ if (Input::exists()) {
           $errorMessage = 'This identification number already exists for the selected role.';
         } else {
           $salt = Hash::salt(32);
-          $defaultPassword = generateRandomPassword(12);
+          $defaultPassword = (new User())->generateRandomPassword(12);
           $hashed = Hash::make($defaultPassword, $salt);
           try {
             $created = $user->create([
@@ -78,7 +69,7 @@ if (Input::exists()) {
               $successMessage = 'User created successfully. TEMP PASSWORD: ' . htmlspecialchars($defaultPassword);
               // Optional email notification
               if ($email) {
-                if (!class_exists('Email')) { require_once 'classes/Email.php'; }
+                if (!class_exists('Email')) { require_once '../../app/Classes/Email.php'; }
                 $body = "Hello $name,\n\nYour account has been created.\nUsername: $username\nTemporary Password: $defaultPassword\nPlease log in and change your password immediately.";
                 if (Email::send($email, 'Your EASIL account', $body)) {
                   $successMessage .= ' (Notification email sent)';
@@ -137,7 +128,7 @@ if (Input::exists()) {
           if ($row->count()) {
             $target = $row->first();
             $salt = Hash::salt(32);
-            $newPwd = generateRandomPassword(12);
+            $newPwd = (new User())->generateRandomPassword(12);
             $user->update([
               'password' => Hash::make($newPwd, $salt),
               'salt' => $salt,
@@ -147,7 +138,7 @@ if (Input::exists()) {
             Audit::log((int)$user->data()->id, 'reset_password', $targetId);
             $successMessage = 'Password reset. TEMP PASSWORD: ' . htmlspecialchars($newPwd);
             if (!empty($target->email)) {
-              if (!class_exists('Email')) { require_once 'classes/Email.php'; }
+              if (!class_exists('Email')) { require_once '../../app/Classes/Email.php'; }
               $body = "Hello $target->name,\n\nYour password has been reset by an administrator.\nTemporary Password: $newPwd\nPlease log in and change your password immediately.";
               if (Email::send($target->email, 'Password reset', $body)) {
                 $successMessage .= ' (Notification email sent)';
@@ -292,7 +283,7 @@ if (Input::exists()) {
               // Commit inserts
               foreach ($validRows as $vr) {
                 $salt = Hash::salt(32);
-                $tempPwd = generateRandomPassword(12);
+                $tempPwd = (new User())->generateRandomPassword(12);
                 $hashed = Hash::make($tempPwd, $salt);
                 $ok = $user->create([
                   'name' => $vr['name'],

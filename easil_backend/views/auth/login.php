@@ -9,7 +9,9 @@
     <?php
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
-    require_once 'core/init.php';
+  
+    require_once '../../app/Core/init.php';
+
     if(Input::exists()){
         Input::get('remember') ? 'Yes' : 'No';
         if(Token::check(Input::get('token'))) {
@@ -40,14 +42,14 @@
                         if ($roleId === 3) {
                             // Super admin route for id=1
                             if ((int)$user->data()->id === 1) {
-                                Redirect::to('super_admin_dashboard.php');
+                                Redirect::to('../admin/super_admin_dashboard.php');
                             } else {
-                                Redirect::to('admin_dashboard.php');
+                                Redirect::to('../admin/admin_dashboard.php');
                             }
                         } elseif ($roleId === 2) {
-                            Redirect::to('lecturer_dashboard.php');
+                            Redirect::to('../lecturer/lecturer_dashboard.php');
                         } else {
-                            Redirect::to('student_dashboard.php');
+                            Redirect::to('../student/student_dashboard.php');
                         }
                     }
                 }else{

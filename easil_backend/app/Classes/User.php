@@ -1,64 +1,70 @@
 <?php
-class User{
+class User
+{
     private $_db,
-    $_data,
-    $_sessionName,
-    $_cookieName,
-    $_isLoggedIn;
+        $_data,
+        $_sessionName,
+        $_cookieName,
+        $_isLoggedIn;
 
     // Lockout policy
     private int $maxFailedAttempts = 5;
     private int $lockMinutes = 15;
 
-    public function __construct($user = null){
+    public function __construct($user = null)
+    {
         $this->_db = DB::getInstance();
         $this->_sessionName = Config::get('session/session_name');
         $this->_cookieName = Config::get('remember/cookie_name');
-        if(!$user){
-            if(Session::exists($this->_sessionName)){
+        if (!$user) {
+            if (Session::exists($this->_sessionName)) {
                 $user = Session::get($this->_sessionName);
-                if($this->find($user)){
+                if ($this->find($user)) {
                     $this->_isLoggedIn = true;
                 } else {
                     $this->logout();
                 }
             }
-        }else{
+        } else {
             $this->find($user);
         }
     }
 
-    public function update($fields = [], $id = null){
-        if(!$id && $this->isLoggedIn()){
+    public function update($fields = [], $id = null)
+    {
+        if (!$id && $this->isLoggedIn()) {
             $id = $this->data()->id;
         }
-        if(!$this->_db->update('users', $id, $fields)){
+        if (!$this->_db->update('users', $id, $fields)) {
             throw new Exception('There was a problem updating');
         }
     }
 
-    public function create($fields = []) {
+    public function create($fields = [])
+    {
         try {
-            
-            if(!$this->_db->insert('users', $fields)) {
+
+            if (!$this->_db->insert('users', $fields)) {
                 $dbError = $this->_db->getError();
                 throw new Exception('Database Error: ' . $dbError);
             }
             return true;
-        } catch(Exception $e) {  
-            throw $e; 
+        } catch (Exception $e) {
+            throw $e;
         }
     }
-    
-    public function getLastError() {
+
+    public function getLastError()
+    {
         return $this->_db->getError();
     }
 
-    public function find($user = null){
-        if($user){
+    public function find($user = null)
+    {
+        if ($user) {
             $field = (is_numeric($user)) ? 'id' : 'username';
             $data = $this->_db->get('users', [$field, '=', $user]);
-            if($data->count()){
+            if ($data->count()) {
                 $this->_data = $data->first();
                 return true;
             }
@@ -66,7 +72,8 @@ class User{
         return false;
     }
 
-    private function isCurrentlyLocked(): bool {
+    private function isCurrentlyLocked(): bool
+    {
         if (isset($this->data()->lock_until) && $this->data()->lock_until) {
             $now = new DateTimeImmutable('now');
             $lockUntil = new DateTimeImmutable($this->data()->lock_until);
@@ -75,22 +82,30 @@ class User{
         return false;
     }
 
-    private function resolveRoleId(): ?int {
-        if (isset($this->data()->role_id)) { return (int)$this->data()->role_id; }
-        if (isset($this->data()->roles)) { return (int)$this->data()->roles; }
+    private function resolveRoleId(): ?int
+    {
+        if (isset($this->data()->role_id)) {
+            return (int)$this->data()->role_id;
+        }
+        if (isset($this->data()->roles)) {
+            return (int)$this->data()->roles;
+        }
         return null;
     }
 
-    public function login($username = null, $password = null, $remember = false){
+    public function login($username = null, $password = null, $remember = false)
+    {
 
-        if(!$username && !$password && $this->exists()) {
+        if (!$username && !$password && $this->exists()) {
             Session::put($this->_sessionName, $this->data()->id);
             $rid = $this->resolveRoleId();
-            if ($rid !== null) { Session::put('user_role_id', $rid); }
+            if ($rid !== null) {
+                Session::put('user_role_id', $rid);
+            }
         } else {
             $user = $this->find($username);
 
-            if($user){
+            if ($user) {
                 // Enforce active status
                 if (isset($this->data()->status) && $this->data()->status !== 'active') {
                     return false;
@@ -99,32 +114,41 @@ class User{
                 if ($this->isCurrentlyLocked()) {
                     return false;
                 }
-                if($this->data()->password === Hash::make($password, $this->data()->salt)){
+                if ($this->data()->password === Hash::make($password, $this->data()->salt)) {
                     // Reset failed attempts and lock
                     $resetFields = [];
-                    if (property_exists($this->data(), 'failed_login_attempts')) { $resetFields['failed_login_attempts'] = 0; }
-                    if (property_exists($this->data(), 'lock_until')) { $resetFields['lock_until'] = null; }
+                    if (property_exists($this->data(), 'failed_login_attempts')) {
+                        $resetFields['failed_login_attempts'] = 0;
+                    }
+                    if (property_exists($this->data(), 'lock_until')) {
+                        $resetFields['lock_until'] = null;
+                    }
                     if (!empty($resetFields)) {
-                        try { $this->_db->update('users', $this->data()->id, $resetFields); } catch (Exception $e) {}
+                        try {
+                            $this->_db->update('users', $this->data()->id, $resetFields);
+                        } catch (Exception $e) {
+                        }
                     }
 
                     Session::put($this->_sessionName, $this->data()->id);
                     $rid = $this->resolveRoleId();
-                    if ($rid !== null) { Session::put('user_role_id', $rid); }
+                    if ($rid !== null) {
+                        Session::put('user_role_id', $rid);
+                    }
 
-                    if($remember){
+                    if ($remember) {
                         $hash = Hash::unique();
                         $hashCheck = $this->_db->get('users_session', ['users_id', '=', $this->data()->id]);
-                            if(!$hashCheck->count()){
-                                $this->_db->insert('users_session', [
-                                    'users_id' => $this->data()->id,
-                                    'hash' => $hash
-                                ]);
-                            } else{
-                        $hash = $hashCheck->first()->hash;
+                        if (!$hashCheck->count()) {
+                            $this->_db->insert('users_session', [
+                                'users_id' => $this->data()->id,
+                                'hash' => $hash
+                            ]);
+                        } else {
+                            $hash = $hashCheck->first()->hash;
                         }
                         Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
-                    } 
+                    }
                     return true;
                 } else {
                     // Failed login: increment attempts and maybe lock
@@ -138,21 +162,25 @@ class User{
                         $lockUntil = (new DateTimeImmutable('now'))->modify('+' . $this->lockMinutes . ' minutes');
                         $update['lock_until'] = $lockUntil->format('Y-m-d H:i:s');
                     }
-                    try { $this->_db->update('users', $this->data()->id, $update); } catch (Exception $e) {}
+                    try {
+                        $this->_db->update('users', $this->data()->id, $update);
+                    } catch (Exception $e) {
+                    }
                 }
             }
         }
         return false;
     }
 
-    public function hasPermission($key){
+    public function hasPermission($key)
+    {
         // Support either role_id or roles column, and permissions/permission fields
         $roleId = $this->resolveRoleId();
         if ($roleId === null) {
             return false;
         }
         $role = $this->_db->get('roles', ['id', '=', $roleId]);
-        if($role->count()){
+        if ($role->count()) {
             $roleRow = $role->first();
             $permissionsJson = null;
             if (isset($roleRow->permissions)) {
@@ -171,34 +199,56 @@ class User{
     }
 
     // Helpers
-    public function getRoleId(): ?int { return $this->resolveRoleId(); }
+    public function getRoleId(): ?int
+    {
+        return $this->resolveRoleId();
+    }
 
-    public function getRoleName(): ?string {
+    public function getRoleName(): ?string
+    {
         $rid = $this->resolveRoleId();
-        if ($rid === null) { return null; }
+        if ($rid === null) {
+            return null;
+        }
         $role = $this->_db->get('roles', ['id', '=', $rid]);
-        if ($role->count()) { return $role->first()->name ?? null; }
+        if ($role->count()) {
+            return $role->first()->name ?? null;
+        }
         return null;
     }
 
-    public function getIdentificationNumber(): ?string {
+    public function getIdentificationNumber(): ?string
+    {
         return isset($this->data()->identification_number) ? $this->data()->identification_number : null;
     }
-
-    public function exists(){
-        return (!empty($this->data)) ? true : false;
+    public function generateRandomPassword($length = 12)
+    {
+        $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@$!%*?&';
+        $pwd = '';
+        for ($i = 0; $i < $length; $i++) {
+            $pwd .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+        return $pwd;
     }
-    public function logout(){
+
+    public function exists()
+    {
+        return !empty($this->_data);
+    }
+    public function logout()
+    {
         $this->_db->delete('users_session', ['users_id', '=', $this->data()->id]);
         Session::delete($this->_sessionName);
         Session::delete('user_role_id');
         Cookie::delete($this->_cookieName);
         Session::delete('success');
-    } 
-    public function data(){
+    }
+    public function data()
+    {
         return $this->_data;
     }
-    public function isLoggedIn(){
+    public function isLoggedIn()
+    {
         return $this->_isLoggedIn;
     }
 }

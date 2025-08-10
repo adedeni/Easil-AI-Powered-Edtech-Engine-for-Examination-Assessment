@@ -1,6 +1,6 @@
 <?php
-require_once 'core/init.php';
-require_once 'classes/Guard.php';
+require_once '../../app/Core/init.php';
+
 $user = Guard::requireAdmin();
 $db = DB::getInstance();
 

@@ -8,7 +8,7 @@
 <body>
     <h1>Change Password</h1>
     <?php
-    require_once 'core/init.php';
+    require_once '../../app/Core/init.php';
 
     $user = new User();
     if(!$user->isLoggedIn()){
@@ -55,11 +55,11 @@
                         // Redirect based on role
                         $roleId = isset($user->data()->role_id) ? (int)$user->data()->role_id : (int)$user->data()->roles;
                         if ($roleId === 3) {
-                            Redirect::to('admin_dashboard.php');
+                            Redirect::to('../admin/admin_dashboard.php');
                         } elseif ($roleId === 2) {
-                            Redirect::to('lecturer_dashboard.php');
+                            Redirect::to('../lecturer/lecturer_dashboard.php');
                         } else {
-                            Redirect::to('student_dashboard.php');
+                            Redirect::to('../student/student_dashboard.php');
                         }
                     }
                 } else {
@@ -75,11 +75,11 @@
                     Session::flash('success', 'Password updated!');
                     $roleId = isset($user->data()->role_id) ? (int)$user->data()->role_id : (int)$user->data()->roles;
                     if ($roleId === 3) {
-                        Redirect::to('admin_dashboard.php');
+                        Redirect::to('../admin/admin_dashboard.php');
                     } elseif ($roleId === 2) {
-                        Redirect::to('lecturer_dashboard.php');
+                        Redirect::to('../lecturer/lecturer_dashboard.php');
                     } else {
-                        Redirect::to('student_dashboard.php');
+                        Redirect::to('../student/student_dashboard.php');
                     }
                 }
             }else{

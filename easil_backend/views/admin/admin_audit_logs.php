@@ -7,9 +7,9 @@
 </head>
 <body>
 <?php
-require_once 'core/init.php';
+require_once '../../app/Core/init.php';
 $user = new User();
-if(!$user->isLoggedIn()) { Redirect::to('login.php'); }
+if(!$user->isLoggedIn()) { Redirect::to('../auth/login.php'); }
 $roleId = isset($user->data()->role_id) ? (int)$user->data()->role_id : (int)$user->data()->roles;
 if ($roleId !== 3) { die('Access denied'); }
 

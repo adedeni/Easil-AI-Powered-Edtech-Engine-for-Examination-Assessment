@@ -1,10 +1,10 @@
 <?php
 class Guard {
     public static function requireLogin(): User {
-        require_once __DIR__ . '/../core/init.php';
+        require_once __DIR__ . '/../Core/init.php';
         $u = new User();
         if (!$u->isLoggedIn()) {
-            Redirect::to('login.php');
+            Redirect::to('../../views/auth/login.php');
         }
         return $u;
     }
