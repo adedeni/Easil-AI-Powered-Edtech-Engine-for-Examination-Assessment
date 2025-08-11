@@ -105,6 +105,7 @@ if(!$user->isLoggedIn()){
         echo '<p>Enrollment successful!</p>';
         echo '<meta http-equiv="refresh" content="1">';
     }
+    
     ?>
 </body>
 </html>
