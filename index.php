@@ -145,37 +145,37 @@
                     <div class="link-card">
                         <h3>Home Page</h3>
                         <p>Main landing page of the system</p>
-                        <a href="index.html" target="_blank">Go to Home</a>
+                        <a href="index.html">Go to Home</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>User Login</h3>
                         <p>Login to existing accounts</p>
-                        <a href="../views/auth/login.php" target="_blank">Login</a>
+                        <a href="easil_backend/views/auth/login.php">Login</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>User Profile</h3>
                         <p>View and edit user profile information</p>
-                        <a href="../views/profile.php">Profile</a>
+                        <a href="easil_backend/views/profile.php">Profile</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Change Password</h3>
                         <p>Update user password</p>
-                        <a href="../views/auth/changepassword.php" target="_blank">Change Password</a>
+                        <a href="easil_backend/views/auth/changepassword.php">Change Password</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Update Profile</h3>
                         <p>Update user profile information</p>
-                        <a href="../views/update.php" target="_blank">Update Profile</a>
+                        <a href="easil_backend/views/update.php">Update Profile</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Logout</h3>
                         <p>Logout from the system</p>
-                        <a href="../views/auth/logout.php" target="_blank">Logout</a>
+                        <a href="easil_backend/views/auth/logout.php">Logout</a>
                     </div>
                 </div>
             </div>
@@ -187,19 +187,19 @@
                     <div class="link-card">
                         <h3>API Endpoint</h3>
                         <p>Main API endpoint for system operations</p>
-                        <a href="../routes/api.php" target="_blank">API</a>
+                        <a href="easil_backend/routes/api.php">API</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>API Documentation</h3>
                         <p>Complete API documentation and usage guide</p>
-                        <a href="../API_DOCUMENTATION.md" target="_blank">API Docs</a>
+                        <a href="easil_backend/API_DOCUMENTATION.md">API Docs</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>API Test Page</h3>
                         <p>Test API functionality and endpoints</p>
-                        <a href="test_api.html" target="_blank">Test API</a>
+                        <a href="test_api.html">Test API</a>
                     </div>
                 </div>
             </div>
@@ -213,43 +213,43 @@
                     <div class="link-card">
                         <h3>Admin Dashboard</h3>
                         <p>Main admin dashboard overview</p>
-                        <a href="../Easil_frontend/src/dashboards/admin/Dashboard.jsx" target="_blank">Admin Dashboard</a>
+                        <a href="Easil_frontend/src/dashboards/admin/Dashboard.jsx">Admin Dashboard</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Manage Courses</h3>
                         <p>Admin course management interface</p>
-                        <a href="../Easil_frontend/src/dashboards/admin/Courses.jsx" target="_blank">Courses</a>
+                        <a href="Easil_frontend/src/dashboards/admin/Courses.jsx">Courses</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Manage Lecturers</h3>
                         <p>Admin lecturer management interface</p>
-                        <a href="../Easil_frontend/src/dashboards/admin/Lecturers.jsx" target="_blank">Lecturers</a>
+                        <a href="Easil_frontend/src/dashboards/admin/Lecturers.jsx">Lecturers</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Manage Students</h3>
                         <p>Admin student management interface</p>
-                        <a href="../Easil_frontend/src/dashboards/admin/Students.jsx" target="_blank">Students</a>
+                        <a href="Easil_frontend/src/dashboards/admin/Students.jsx">Students</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Manage Teachers</h3>
                         <p>Admin teacher management interface</p>
-                        <a href="../Easil_frontend/src/dashboards/admin/Teachers.jsx" target="_blank">Teachers</a>
+                        <a href="Easil_frontend/src/dashboards/admin/Teachers.jsx">Teachers</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>View Reports</h3>
                         <p>Admin reports and analytics</p>
-                        <a href="../Easil_frontend/src/dashboards/admin/Reports.jsx" target="_blank">Reports</a>
+                        <a href="Easil_frontend/src/dashboards/admin/Reports.jsx">Reports</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>View Results</h3>
                         <p>Admin results management</p>
-                        <a href="../Easil_frontend/src/dashboards/admin/Results.jsx" target="_blank">Results</a>
+                        <a href="Easil_frontend/src/dashboards/admin/Results.jsx">Results</a>
                     </div>
                 </div>
 
@@ -258,37 +258,37 @@
                     <div class="link-card">
                         <h3>Lecturer Dashboard</h3>
                         <p>Main lecturer dashboard overview</p>
-                        <a href="../Easil_frontend/src/dashboards/lecturer/Dashboard.jsx" target="_blank">Lecturer Dashboard</a>
+                        <a href="Easil_frontend/src/dashboards/lecturer/Dashboard.jsx">Lecturer Dashboard</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Manage Courses</h3>
                         <p>Lecturer course management</p>
-                        <a href="../Easil_frontend/src/dashboards/lecturer/Courses.jsx" target="_blank">Courses</a>
+                        <a href="Easil_frontend/src/dashboards/lecturer/Courses.jsx">Courses</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Create Exam</h3>
                         <p>Create new examinations</p>
-                        <a href="../Easil_frontend/src/dashboards/lecturer/CreateExam.jsx" target="_blank">Create Exam</a>
+                        <a href="Easil_frontend/src/dashboards/lecturer/CreateExam.jsx">Create Exam</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Exam Management</h3>
                         <p>Manage existing examinations</p>
-                        <a href="../Easil_frontend/src/dashboards/lecturer/ExamManagement.jsx" target="_blank">Exam Management</a>
+                        <a href="Easil_frontend/src/dashboards/lecturer/ExamManagement.jsx">Exam Management</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Manage Students</h3>
                         <p>Lecturer student management</p>
-                        <a href="../Easil_frontend/src/dashboards/lecturer/Students.jsx" target="_blank">Students</a>
+                        <a href="Easil_frontend/src/dashboards/lecturer/Students.jsx">Students</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>View Reports</h3>
                         <p>Lecturer reports and analytics</p>
-                        <a href="../Easil_frontend/src/dashboards/lecturer/Reports.jsx" target="_blank">Reports</a>
+                        <a href="Easil_frontend/src/dashboards/lecturer/Reports.jsx">Reports</a>
                     </div>
                 </div>
 
@@ -297,37 +297,37 @@
                     <div class="link-card">
                         <h3>Student Home</h3>
                         <p>Main student dashboard</p>
-                        <a href="../Easil_frontend/src/dashboards/student/Home.jsx" target="_blank">Student Home</a>
+                        <a href="Easil_frontend/src/dashboards/student/Home.jsx">Student Home</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>View Assessments</h3>
                         <p>Browse available assessments</p>
-                        <a href="../Easil_frontend/src/dashboards/student/Assessments.jsx" target="_blank">Assessments</a>
+                        <a href="Easil_frontend/src/dashboards/student/Assessments.jsx">Assessments</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Assessment Details</h3>
                         <p>View detailed assessment information</p>
-                        <a href="../Easil_frontend/src/dashboards/student/AssessmentDetails.jsx" target="_blank">Assessment Details</a>
+                        <a href="Easil_frontend/src/dashboards/student/AssessmentDetails.jsx">Assessment Details</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Take Test</h3>
                         <p>Interface for taking assessments</p>
-                        <a href="../Easil_frontend/src/dashboards/student/TestInterface.jsx" target="_blank">Test Interface</a>
+                        <a href="Easil_frontend/src/dashboards/student/TestInterface.jsx">Test Interface</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Assessment Complete</h3>
                         <p>Assessment completion page</p>
-                        <a href="../Easil_frontend/src/dashboards/student/AssessmentComplete.jsx" target="_blank">Assessment Complete</a>
+                        <a href="Easil_frontend/src/dashboards/student/AssessmentComplete.jsx">Assessment Complete</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>View Results</h3>
                         <p>View assessment results</p>
-                        <a href="../Easil_frontend/src/dashboards/student/Results.jsx" target="_blank">Results</a>
+                        <a href="Easil_frontend/src/dashboards/student/Results.jsx">Results</a>
                     </div>
                 </div>
 
@@ -336,7 +336,7 @@
                     <div class="link-card">
                         <h3>Login Page</h3>
                         <p>Frontend login interface</p>
-                        <a href="../Easil_frontend/src/dashboards/auth/Login.jsx" target="_blank">Login</a>
+                        <a href="Easil_frontend/src/dashboards/auth/Login.jsx">Login</a>
                     </div>
                 </div>
             </div>
@@ -348,23 +348,23 @@
                     <div class="link-card">
                         <h3>Database Schema</h3>
                         <p>Complete database structure and schema</p>
-                        <a href="easil.sql" target="_blank">Database Schema</a>
+                        <a href="easil_backend/easil.sql">Database Schema</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Main App Component</h3>
                         <p>Main React application component</p>
-                        <a href="../Easil_frontend/src/App.jsx" target="_blank">App.jsx</a>
+                        <a href="Easil_frontend/src/App.jsx">App.jsx</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Frontend Entry Point</h3>
                         <p>Main entry point for React application</p>
-                        <a href="../Easil_frontend/src/main.jsx" target="_blank">main.jsx</a>
+                        <a href="Easil_frontend/src/main.jsx">main.jsx</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
-</html> 
+</html>

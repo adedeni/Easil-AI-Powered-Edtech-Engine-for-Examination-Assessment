@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 11, 2025 at 12:01 AM
+-- Generation Time: Aug 11, 2025 at 12:30 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -162,6 +162,22 @@ CREATE TABLE `lecturer_courses` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mail_config`
+--
+
+CREATE TABLE `mail_config` (
+  `id` int(11) NOT NULL,
+  `smtp_host` varchar(255) NOT NULL,
+  `smtp_port` int(11) NOT NULL,
+  `smtp_username` varchar(255) DEFAULT NULL,
+  `smtp_password` varchar(255) DEFAULT NULL,
+  `smtp_from_address` varchar(255) DEFAULT NULL,
+  `smtp_from_name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `roles`
 --
 
@@ -307,6 +323,12 @@ ALTER TABLE `lecturer_courses`
   ADD KEY `idx_lecturer_courses_course` (`course_id`);
 
 --
+-- Indexes for table `mail_config`
+--
+ALTER TABLE `mail_config`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -383,6 +405,12 @@ ALTER TABLE `grades`
 -- AUTO_INCREMENT for table `lecturer_courses`
 --
 ALTER TABLE `lecturer_courses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `mail_config`
+--
+ALTER TABLE `mail_config`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
