@@ -19,12 +19,14 @@ if ((int)$user->data()->id !== 1) {
     <h1>Super Admin Dashboard</h1>
     <p>Welcome, <?php echo escape($user->data()->username); ?>!</p>
     <ul>
-        <li><a href="admin_users.php">Manage Users</a></li>
-        <li><a href="admin_audit_logs.php">View Audit Logs</a></li>
-        
-        <li><a href="../auth/changepassword.php">Change My Password</a></a></li>
-        <li><a href="../profile.php?user=<?php echo escape($user->data()->username);?>">My Profile</a></li>
-        <li><a href="../auth/logout.php">Logout</a></li>
+    <li><a href="admin_users.php">Manage Users</a></li>
+    <li><a href="admin_courses.php">Manage Courses</a></li>
+    <li><a href="admin_courses_import.php">Bulk Import Courses</a></li>
+    <li><a href="admin_courses_enroll.php">Enroll Students in Courses</a></li>
+    <li><a href="admin_audit_logs.php">View Audit Logs</a></li>
+    <li><a href="../auth/changepassword.php">Change My Password</a></a></li>
+    <li><a href="../profile.php?user=<?php echo escape($user->data()->username);?>">My Profile</a></li>
+    <li><a href="../auth/logout.php">Logout</a></li>
     </ul>
 </body>
 </html>

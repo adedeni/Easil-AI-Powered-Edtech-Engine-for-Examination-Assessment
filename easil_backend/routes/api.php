@@ -260,7 +260,80 @@ try {
             break;
             
         default:
-            throw new Exception('Endpoint not found');
+                // Course management endpoints
+                require_once __DIR__ . '/../controllers/CourseController.php';
+                $courseController = new CourseController();
+
+                if ($endpoint === 'courses') {
+                    if ($request_method === 'GET') {
+                        // List/filter/search courses
+                        $filters = $_GET;
+                        $response['data'] = $courseController->list($filters);
+                        $response['success'] = true;
+                    } elseif ($request_method === 'POST') {
+                        // Create new course
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $response['data'] = $courseController->create($input);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'courses_bulk_import') {
+                    if ($request_method === 'POST') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $response['data'] = $courseController->bulkImport($input);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'course_update') {
+                    if ($request_method === 'PUT') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $id = $input['id'] ?? null;
+                        $data = $input['data'] ?? [];
+                        $response['data'] = $courseController->update($id, $data);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'course_delete') {
+                    if ($request_method === 'DELETE') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $id = $input['id'] ?? null;
+                        $response['data'] = $courseController->delete($id);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'course_enroll') {
+                    if ($request_method === 'POST') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $courseId = $input['course_id'] ?? null;
+                        $studentIds = $input['student_ids'] ?? [];
+                        $response['data'] = $courseController->enroll($courseId, $studentIds);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'course_enrolled_students') {
+                    if ($request_method === 'GET') {
+                        $courseId = $_GET['course_id'] ?? null;
+                        $response['data'] = $courseController->enrolledStudents($courseId);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'course_details') {
+                    if ($request_method === 'GET') {
+                        $id = $_GET['id'] ?? null;
+                        $response['data'] = $courseController->details($id);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } else {
+                    throw new Exception('Endpoint not found');
+                }
     }
     
 } catch (Exception $e) {

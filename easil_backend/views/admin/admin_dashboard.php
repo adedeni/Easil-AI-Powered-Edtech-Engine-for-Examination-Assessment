@@ -22,6 +22,9 @@
             <li><a href="../auth/changepassword.php">Change Password</a></li>
                 
                 <li><a href="../admin/admin_users.php">Manage Users</a></li>
+                <li><a href="../admin/admin_courses.php">Manage Courses</a></li>
+                <li><a href="../admin/admin_courses_import.php">Bulk Import Courses</a></li>
+                <li><a href="../admin/admin_courses_enroll.php">Enroll Students in Courses</a></li>
                 <li><a href="../auth/logout.php">Logout</a></li>
             </ul>
 </body>

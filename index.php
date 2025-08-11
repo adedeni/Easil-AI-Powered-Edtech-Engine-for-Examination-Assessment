@@ -137,8 +137,6 @@
                 <h3>📋 How to Use This Page</h3>
                 <p>This page contains links to all available pages in the EASIL system. Click on any link to navigate to the respective page. The links are organized by category for easy navigation.</p>
             </div>
-
-            <!-- Backend PHP Pages -->
             <div class="section backend-links">
                 <h2>🔧 Backend PHP Pages</h2>
                 <div class="link-grid">
@@ -180,7 +178,6 @@
                 </div>
             </div>
 
-            <!-- API Documentation -->
             <div class="section api-links">
                 <h2>🔌 API & Development</h2>
                 <div class="link-grid">
@@ -204,7 +201,6 @@
                 </div>
             </div>
 
-            <!-- Frontend React Pages -->
             <div class="section frontend-links">
                 <h2>🎨 Frontend React Pages</h2>
                 
@@ -341,7 +337,6 @@
                 </div>
             </div>
 
-            <!-- System Information -->
             <div class="section">
                 <h2>📊 System Information</h2>
                 <div class="link-grid">

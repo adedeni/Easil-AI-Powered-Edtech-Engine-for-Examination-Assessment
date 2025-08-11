@@ -17,6 +17,9 @@ if(!$user->isLoggedIn()){
 <p>Welcome, <?php echo escape($user->data()->username); ?>!</p>
 <ul>
     <li><a href="../profile.php?user=<?php echo escape($user->data()->username);?>">Profile</a></li>
+    <li><a href="../lecturer/lecturer_courses.php">My Courses</a></li>
+    <li><a href="../lecturer/lecturer_courses_enroll.php">Enroll Students</a></li>
+    <li><a href="../lecturer/lecturer_courses_students.php">View Enrolled Students</a></li>
     <li><a href="../auth/changepassword.php">Change Password</a></li>
     <li><a href="../auth/logout.php">Logout</a></li>
 </ul>
