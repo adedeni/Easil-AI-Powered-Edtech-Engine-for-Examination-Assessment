@@ -24,7 +24,7 @@
                 <li><a href="../admin/admin_users.php">Manage Users</a></li>
                 <li><a href="../admin/admin_courses.php">Manage Courses</a></li>
                 <li><a href="../admin/admin_courses_import.php">Bulk Import Courses</a></li>
-                <li><a href="admin_courses_enrolled.php?course_id=<?php echo $course['id']; ?>">Enroll Students</a></li>
+
                 <li><a href="../auth/logout.php">Logout</a></li>
             </ul>
 </body>

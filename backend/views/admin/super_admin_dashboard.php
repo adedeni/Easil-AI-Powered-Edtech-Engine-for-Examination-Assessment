@@ -24,9 +24,7 @@ if ((int)$user->data()->id !== 1) {
         <li><a href="admin_users.php">Manage Users</a></li>
         <li><a href="admin_courses.php">Manage Courses</a></li>
         <li><a href="admin_courses_import.php">Bulk Import Courses</a></li>
-        <li>
-            <a href="admin_courses_enrolled.php?course_id=<?php echo $course['id']; ?>">Enroll Students</a>
-        </li>
+
         <li><a href="admin_audit_logs.php">View Audit Logs</a></li>
         <li><a href="../auth/changepassword.php">Change My Password</a></a></li>
         <li><a href="../profile.php?user=<?php echo escape($user->data()->username); ?>">My Profile</a></li>

@@ -6,10 +6,13 @@ require_once '../../app/Models/EnrollmentModel.php';
 
 // Get course ID from query
 $course_id = isset($_GET['course_id']) ? intval($_GET['course_id']) : 0;
+if ($course_id <= 0) {
+    echo "<p style='color:red;'>No course selected or invalid course ID.</p>";
+    exit;
+}
 $course = CourseModel::find($course_id);
-
 if (!$course) {
-    echo "<p>Invalid course selected.</p>";
+    echo "<p style='color:red;'>Course not found in the database.</p>";
     exit;
 }
 
