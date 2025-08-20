@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Profile</title>
-</head>
-<body>
-    <?php
+<?php
         require_once '../app/Core/init.php';
 
         $user = new User();
@@ -34,7 +26,16 @@
                     }
                 }
         }
-    ?> <br>
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+</head>
+<body>
+     <br>
     <form action="" method="post">
         <div class="field">
             <label for="username">Username</label>

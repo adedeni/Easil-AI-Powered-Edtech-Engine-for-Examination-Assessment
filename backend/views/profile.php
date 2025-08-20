@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-</head>
-
-<body>
-    <h1>Profile Page</h1>
-    <?php
+<?php
     require_once '../app/Core/init.php';
 
 
@@ -27,7 +16,19 @@
             $data = $user->data();
         }
     }
-    ?>
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+</head>
+
+<body>
+    <h1>Profile Page</h1>
+    
     <h3><?php echo escape($data->username); ?></h3>
 
     <p>Full name: <?php echo escape($data->name); ?></p>
