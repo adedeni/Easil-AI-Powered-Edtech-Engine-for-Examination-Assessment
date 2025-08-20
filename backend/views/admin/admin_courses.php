@@ -82,7 +82,7 @@ $user = Guard::requireAdmin();
     </form>
    
     <a href="admin_courses_import.php">Bulk Import Courses</a>
-    <a href="admin_courses_enroll.php">Enroll Students</a>
+    <a href="admin_courses_enrolled.php?course_id=<?php echo $course['id']; ?>">Enroll Students</a>
     <p>
         <?php
         require_once '../../app/Core/constants.php';
