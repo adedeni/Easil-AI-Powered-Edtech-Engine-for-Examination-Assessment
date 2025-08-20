@@ -1,3 +1,11 @@
+<?php
+    require_once '../../app/Core/init.php';
+    
+    $user = Guard::requireAdmin();
+        if(Session::exists('success')){
+            echo Session::flash('success');
+        }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +15,7 @@
 </head>
 <body> 
     <h1>This is Easil Admin Dashboard</h1>   
-    <?php
-    require_once '../../app/Core/init.php';
     
-    $user = Guard::requireAdmin();
-        if(Session::exists('success')){
-            echo Session::flash('success');
-        }
-            ?>
             <p>Welcome, <?php echo $user->data()->username; ?>!</p>
             <ul>
                 <li><a href="../profile.php?user=<?php echo escape($user->data()->username);?>"><?php echo $user->data()->username; ?>'s Profile</a></li>
