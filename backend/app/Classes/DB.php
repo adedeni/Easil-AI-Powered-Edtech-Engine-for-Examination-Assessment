@@ -126,7 +126,11 @@ public function results(){
     return $this->_results;
 }
 public function first(){
-    return $this->results()[0];
+    // Check if the results array is not empty before returning the first element
+    if (isset($this->_results[0])) {
+        return $this->_results[0];
+    }
+    return null; // or false
 }
 public function error(){
     return $this->_error;

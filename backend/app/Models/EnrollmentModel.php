@@ -1,15 +1,22 @@
 <?php
-define('STUDENT_ROLE_ID', 3); // Change 3 to your actual student role ID
+define('STUDENT_ROLE_ID', 3);
 
 class EnrollmentModel {
     public static function findStudent($identifier) {
         $db = DB::getInstance();
-        // Try by ID
-        $student = $db->get('users', ['id', '=', $identifier])->first();
-        if ($student && $student->role_id == STUDENT_ROLE_ID) return (array)$student;
-        // Try by email
-        $student = $db->get('users', ['email', '=', $identifier])->first();
-        if ($student && $student->role_id == STUDENT_ROLE_ID) return (array)$student;
+        
+        // Try to find by ID
+        $db->get('users', ['id', '=', $identifier]);
+        if ($db->count() && $db->first()->role_id == STUDENT_ROLE_ID) {
+            return (array)$db->first();
+        }
+
+        // Try to find by email
+        $db->get('users', ['email', '=', $identifier]);
+        if ($db->count() && $db->first()->role_id == STUDENT_ROLE_ID) {
+            return (array)$db->first();
+        }
+
         return false;
     }
 
