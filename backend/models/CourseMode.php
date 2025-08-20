@@ -1,25 +1,27 @@
 <?php
 class CourseMode {
-	private $db;
+    private $db;
 
-	public function __construct($db) {
-		$this->db = $db;
-	}
+    public function __construct($db) {
+        $this->db = $db;
+    }
 
 	// Create a new course
 	public function createCourse($data) {
-		$fields = [
-			'title' => $data['title'],
-			'code' => $data['code'],
-			'description' => $data['description'] ?? '',
-			'status' => $data['status'] ?? 'active',
-			'coordinator_user_id' => $data['coordinator_user_id'] ?? null,
-			'department' => $data['department'] ?? null,
-			'materials' => $data['materials'] ?? null,
-			'created_by_user_id' => $data['created_by_user_id'] ?? null
-		];
-		return $this->db->insert('courses', $fields);
-	}
+    $fields = [
+        'title' => $data['title'],
+        'code' => $data['code'],
+        'description' => $data['description'] ?? '',
+        'status' => $data['status'] ?? 'active',
+        'coordinator_user_id' => !empty($data['coordinator_user_id']) ? $data['coordinator_user_id'] : null, 
+        'department' => $data['department'] ?? null,
+        'materials' => $data['materials'] ?? null,
+        'created_by_user_id' => $data['created_by_user_id'] ?? null
+    ];
+
+    
+    return $this->db->insert('courses', $fields);
+}
 
 	// Bulk import courses
 	public function bulkImportCourses($courses) {
@@ -96,8 +98,22 @@ class CourseMode {
 
 	// Get course details
 	public function getCourseDetails($id) {
-		$sql = "SELECT c.*, u.name as coordinator FROM courses c LEFT JOIN users u ON c.coordinator_user_id = u.id WHERE c.id = ?";
-		$this->db->query($sql, [$id]);
-		return $this->db->first();
+    // Select the user's name and username, aliasing them as 'coordinator' and 'coordinator_username'
+    $sql = "SELECT c.*, u.name as coordinator, u.username as coordinator_username FROM courses c LEFT JOIN users u ON c.coordinator_user_id = u.id WHERE c.id = ?";
+    $this->db->query($sql, [$id]);
+    return $this->db->first();
+	    
 	}
+	
+	public function getCoordinators() {
+ 
+    $sql = "SELECT id, username, name FROM users WHERE user_group_id = 2 ORDER BY username"; 
+    return $this->db->query($sql)->results();
+	    
+	}
+
+
+	 public function getDatabaseError() {
+        return $this->db->getError();
+    }
 }

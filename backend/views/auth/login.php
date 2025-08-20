@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-  
-    require_once '../../app/Core/init.php';
-
-    if(Input::exists()){
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+require_once '../../app/Core/init.php';
+if(Input::exists('post')){
+//if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Input::get('remember') ? 'Yes' : 'No';
         if(Token::check(Input::get('token'))) {
             $validate = new Validate();
@@ -24,7 +16,9 @@
                 $user = new User();
                 $remember = (Input::get('remember') === 'on') ? true : false; 
                 $login = $user->login(Input::get('username'), Input::get('password'), $remember);
-                if($login){
+
+if ($login) {
+    
                     // Ensure account is active
                     if (isset($user->data()->status) && $user->data()->status !== 'active') {
                         echo 'Account is inactive.';
@@ -53,14 +47,20 @@
                         }
                     }
                 }else{
-                    echo "Login failed";
+                    Session::flash('error', 'Login failed.');
+                    Redirect::to('login.php'); // Redirect back to login
                 }
             }else{
                 foreach($validation->errors() as $error){
-                    echo $error, '<br>';
+                    Session::flash('errors', $validation->errors());
+                    Redirect::to('login.php');
+                    break;
                 }
             }
-        }
+        }else {
+    
+    die('TOKEN MISMATCH! Session might not be working.'); 
+}
     }
     if(isset($_POST['login'])){
         $username = $_POST['username'];
@@ -68,6 +68,15 @@
         $token = $_POST['token'];
     }
     ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    
     <form action="" method="post">
        <div class="field">
         <label for="username">Username</label>
@@ -99,6 +108,6 @@
        <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
        <input type="submit" name="login" value="Log in">
     </form> <br>
-    <!-- Registration disabled -->
+    
 </body>
 </html>

@@ -1,0 +1,4 @@
+[19-Aug-2025 23:15:14 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 23:15:14 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/cereuste/public_html/backend/views/profile.php:1) in /home/cereuste/public_html/backend/app/Classes/Redirect.php on line 16
+[19-Aug-2025 23:15:22 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 23:15:22 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/cereuste/public_html/backend/views/update.php:1) in /home/cereuste/public_html/backend/app/Classes/Redirect.php on line 16

@@ -47,27 +47,27 @@ $user = Guard::requireAdmin();
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            <?php foreach ($courses as $course): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($course->title); ?></td>
-                <td><?php echo htmlspecialchars($course->code); ?></td>
-                <td><?php echo htmlspecialchars($course->status); ?></td>
-                <td><?php echo htmlspecialchars($course->department); ?></td>
-                <td><?php echo htmlspecialchars($course->coordinator); ?></td>
-                <td><?php echo htmlspecialchars($course->created_at); ?></td>
-                <td>
-                    <a href="admin_courses_edit.php?id=<?php echo $course->id; ?>">Edit</a> |
-                    <a href="admin_courses_delete.php?id=<?php echo $course->id; ?>" onclick="return confirm('Delete this course?');">Delete</a> |
-                    <a href="admin_courses_details.php?id=<?php echo $course->id; ?>">Details</a> |
-                    <a href="admin_courses_enrolled.php?id=<?php echo $course->id; ?>">Enrolled Students</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
+    <tbody>
+    <?php foreach ($courses as $course): ?>
+    <tr>
+        <td><?php echo htmlspecialchars($course->title ?? 'N/A'); ?></td>
+        <td><?php echo htmlspecialchars($course->code ?? 'N/A'); ?></td>
+        <td><?php echo htmlspecialchars($course->status ?? 'N/A'); ?></td>
+        <td><?php echo htmlspecialchars($course->department ?? 'N/A'); ?></td>
+        <td><?php echo htmlspecialchars($course->coordinator ?? 'N/A'); ?></td>
+        <td><?php echo htmlspecialchars($course->created_at ?? 'N/A'); ?></td>
+        <td>
+            <a href="admin_courses_edit.php?id=<?php echo htmlspecialchars($course->id); ?>">Edit</a> |
+            <a href="admin_courses_delete.php?id=<?php echo htmlspecialchars($course->id); ?>" onclick="return confirm('Delete this course?');">Delete</a> |
+            <a href="admin_courses_details.php?id=<?php echo htmlspecialchars($course->id); ?>">Details</a> |
+            <a href="admin_courses_enrolled.php?id=<?php echo htmlspecialchars($course->id); ?>">Enrolled Students</a>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</tbody>
     </table>
     <h2>Add New Course</h2>
-    <form method="post" action="">
+    <form method="post" action="add_course_process.php">
         <input type="text" name="title" placeholder="Title" required>
         <input type="text" name="code" placeholder="Code" required>
         <input type="text" name="description" placeholder="Description">
@@ -78,26 +78,17 @@ $user = Guard::requireAdmin();
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
         </select>
-        <button type="submit" name="add_course">Add Course</button>
+         <button type="submit" name="add_course">Add Course</button>
     </form>
-    <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_course'])) {
-        $fields = [
-            'title' => $_POST['title'],
-            'code' => $_POST['code'],
-            'description' => $_POST['description'],
-            'department' => $_POST['department'],
-            'coordinator_user_id' => $_POST['coordinator_user_id'],
-            'materials' => $_POST['materials'],
-            'status' => $_POST['status'],
-            'created_by_user_id' => $user->data()->id
-        ];
-        $courseModel->createCourse($fields);
-        echo '<p>Course added successfully!</p>';
-        echo '<meta http-equiv="refresh" content="1">';
-    }
-    ?>
+   
     <a href="admin_courses_import.php">Bulk Import Courses</a>
     <a href="admin_courses_enroll.php">Enroll Students</a>
+    <p>
+        <?php
+        require_once '../../app/Core/constants.php';
+        $dashboardLink = ($user->data()->id === $SUPER_ADMIN_ID) ? 'super_admin_dashboard.php' : 'admin_dashboard.php';
+        ?>
+        <a href="<?php echo $dashboardLink; ?>">Back to Dashboard</a>
+    </p>
 </body>
 </html>

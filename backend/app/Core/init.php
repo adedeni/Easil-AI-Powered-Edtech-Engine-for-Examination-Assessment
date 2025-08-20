@@ -1,13 +1,18 @@
- <?php
+<?php
 session_start();
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 define('APPROOT', dirname(dirname(__DIR__)));
 
 $GLOBALS['config'] = [
     'mysql' => [
-        'host' => '127.0.0.1',
-        'username' => 'root',
-        'password' => '',
-        'db' => 'easil'
+        'host' => 'localhost',
+        'username' => 'cereuste',
+        'password' => '2-hmNTOVo!965t',
+        'db' => 'cereuste_easil'
     ],
     'remember' => [
         'cookie_name' => 'hash',

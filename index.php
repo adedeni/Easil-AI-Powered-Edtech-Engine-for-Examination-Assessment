@@ -143,37 +143,37 @@
                     <div class="link-card">
                         <h3>Home Page</h3>
                         <p>Main landing page of the system</p>
-                        <a href="index.html">Go to Home</a>
+                        <a href="index.php">Go to Home</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>User Login</h3>
                         <p>Login to existing accounts</p>
-                        <a href="easil_backend/views/auth/login.php">Login</a>
+                        <a href="backend/views/auth/login.php">Login</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>User Profile</h3>
                         <p>View and edit user profile information</p>
-                        <a href="easil_backend/views/profile.php">Profile</a>
+                        <a href="backend/views/profile.php">Profile</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Change Password</h3>
                         <p>Update user password</p>
-                        <a href="easil_backend/views/auth/changepassword.php">Change Password</a>
+                        <a href="backend/views/auth/changepassword.php">Change Password</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Update Profile</h3>
                         <p>Update user profile information</p>
-                        <a href="easil_backend/views/update.php">Update Profile</a>
+                        <a href="backend/views/update.php">Update Profile</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>Logout</h3>
                         <p>Logout from the system</p>
-                        <a href="easil_backend/views/auth/logout.php">Logout</a>
+                        <a href="backend/views/auth/logout.php">Logout</a>
                     </div>
                 </div>
             </div>
@@ -184,13 +184,13 @@
                     <div class="link-card">
                         <h3>API Endpoint</h3>
                         <p>Main API endpoint for system operations</p>
-                        <a href="easil_backend/routes/api.php">API</a>
+                        <a href="backend/routes/api.php">API</a>
                     </div>
                     
                     <div class="link-card">
                         <h3>API Documentation</h3>
                         <p>Complete API documentation and usage guide</p>
-                        <a href="easil_backend/API_DOCUMENTATION.md">API Docs</a>
+                        <a href="backend/API_DOCUMENTATION.md">API Docs</a>
                     </div>
                     
                     <div class="link-card">

@@ -260,11 +260,63 @@ try {
             break;
             
         default:
-                // Course management endpoints
+                // User management endpoints
+                require_once __DIR__ . '/../models/UserModel.php';
+                $userModel = new UserModel(DB::getInstance());
                 require_once __DIR__ . '/../controllers/CourseController.php';
                 $courseController = new CourseController();
 
-                if ($endpoint === 'courses') {
+                if ($endpoint === 'users') {
+                    if ($request_method === 'GET') {
+                        $filters = $_GET;
+                        $response['data'] = $userModel->getUsers($filters);
+                        $response['success'] = true;
+                    } elseif ($request_method === 'POST') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $response['data'] = $userModel->createUser($input);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'user_update') {
+                    if ($request_method === 'PUT') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $id = $input['id'] ?? null;
+                        $data = $input['data'] ?? [];
+                        $response['data'] = $userModel->updateUser($id, $data);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'user_delete') {
+                    if ($request_method === 'DELETE') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $id = $input['id'] ?? null;
+                        $response['data'] = $userModel->deleteUser($id);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'roles') {
+                    if ($request_method === 'GET') {
+                        $response['data'] = $userModel->getRoles();
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                } elseif ($endpoint === 'user_assign_role') {
+                    if ($request_method === 'PUT') {
+                        $input = json_decode(file_get_contents('php://input'), true);
+                        $userId = $input['user_id'] ?? null;
+                        $roleId = $input['role_id'] ?? null;
+                        $response['data'] = $userModel->assignRole($userId, $roleId);
+                        $response['success'] = true;
+                    } else {
+                        throw new Exception('Method not allowed');
+                    }
+                }
+                // ...existing course management endpoints
+                else if ($endpoint === 'courses') {
                     if ($request_method === 'GET') {
                         // List/filter/search courses
                         $filters = $_GET;

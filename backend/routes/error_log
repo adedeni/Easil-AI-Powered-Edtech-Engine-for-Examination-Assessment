@@ -1,0 +1,5 @@
+[19-Aug-2025 21:54:51 UTC] PHP Warning:  require_once(core/init.php): Failed to open stream: No such file or directory in /home/cereuste/public_html/backend/routes/api.php on line 12
+[19-Aug-2025 21:54:51 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'core/init.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/cereuste/public_html/backend/routes/api.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/cereuste/public_html/backend/routes/api.php on line 12

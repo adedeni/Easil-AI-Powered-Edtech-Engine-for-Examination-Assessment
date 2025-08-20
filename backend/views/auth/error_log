@@ -1,0 +1,47 @@
+[19-Aug-2025 20:23:43 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 20:23:43 UTC] PHP Warning:  require_once(/home/cereuste/public_html/backend/app/Classes/Cookie.php): Failed to open stream: No such file or directory in /home/cereuste/public_html/backend/app/Core/init.php on line 26
+[19-Aug-2025 20:23:43 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/cereuste/public_html/backend/app/Classes/Cookie.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/cereuste/public_html/backend/app/Core/init.php:26
+Stack trace:
+#0 /home/cereuste/public_html/backend/app/Core/init.php(31): {closure}('Cookie')
+#1 /home/cereuste/public_html/backend/views/auth/login.php(13): require_once('/home/cereuste/...')
+#2 {main}
+  thrown in /home/cereuste/public_html/backend/app/Core/init.php on line 26
+[19-Aug-2025 20:30:39 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 20:30:39 UTC] PHP Warning:  require_once(../../app/Classes/Cookie.php): Failed to open stream: No such file or directory in /home/cereuste/public_html/backend/app/Core/init.php on line 26
+[19-Aug-2025 20:30:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../app/Classes/Cookie.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/cereuste/public_html/backend/app/Core/init.php:26
+Stack trace:
+#0 /home/cereuste/public_html/backend/app/Core/init.php(31): {closure}('Cookie')
+#1 /home/cereuste/public_html/backend/views/auth/login.php(13): require_once('/home/cereuste/...')
+#2 {main}
+  thrown in /home/cereuste/public_html/backend/app/Core/init.php on line 26
+[19-Aug-2025 20:33:20 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 20:34:11 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "APPROOT" in /home/cereuste/public_html/backend/app/Core/init.php:28
+Stack trace:
+#0 /home/cereuste/public_html/backend/views/auth/login.php(13): require_once()
+#1 {main}
+  thrown in /home/cereuste/public_html/backend/app/Core/init.php on line 28
+[19-Aug-2025 20:35:26 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 20:35:26 UTC] PHP Warning:  require_once(./../app/Functions/sanitize.php): Failed to open stream: No such file or directory in /home/cereuste/public_html/backend/app/Core/init.php on line 28
+[19-Aug-2025 20:35:26 UTC] PHP Fatal error:  Uncaught Error: Failed opening required './../app/Functions/sanitize.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/cereuste/public_html/backend/app/Core/init.php:28
+Stack trace:
+#0 /home/cereuste/public_html/backend/views/auth/login.php(13): require_once()
+#1 {main}
+  thrown in /home/cereuste/public_html/backend/app/Core/init.php on line 28
+[19-Aug-2025 20:35:58 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 20:36:21 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 20:36:22 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:18:41 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:19:01 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:30:43 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:31:04 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:42:29 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:44:58 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:46:01 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:46:10 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:46:23 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 22:48:09 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/cereuste/public_html/backend/views/auth/login.php:11) in /home/cereuste/public_html/backend/app/Classes/Redirect.php on line 16
+[19-Aug-2025 22:49:15 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/cereuste/public_html/backend/views/auth/login.php:11) in /home/cereuste/public_html/backend/app/Classes/Cookie.php on line 10
+[19-Aug-2025 22:49:15 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/cereuste/public_html/backend/views/auth/login.php:11) in /home/cereuste/public_html/backend/app/Classes/Redirect.php on line 16
+[19-Aug-2025 22:56:46 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/cereuste/public_html/backend/views/auth/login.php:21) in /home/cereuste/public_html/backend/app/Classes/Redirect.php on line 16
+[19-Aug-2025 23:15:18 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/cereuste/public_html/backend/app/Core/init.php on line 2
+[19-Aug-2025 23:15:18 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/cereuste/public_html/backend/views/auth/changepassword.php:1) in /home/cereuste/public_html/backend/app/Classes/Redirect.php on line 16
