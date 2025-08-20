@@ -55,17 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
 }
 ?>
 
-<h1>Enrolled Students for <?php echo htmlspecialchars($course['title']); ?></h1>
+<h1>Enrolled Students for <?php echo htmlspecialchars($course->title); ?></h1>
 <p><a href="admin_courses.php">&larr; Back to Courses</a></p>
 
-<!-- Bulk enroll form -->
 <form action="admin_courses_enrolled.php?course_id=<?php echo $course_id; ?>" method="post" enctype="multipart/form-data">
     <label for="csv_file">Bulk Enroll Students (CSV: student_id or email):</label>
     <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
     <button type="submit" name="import">Enroll Students</button>
 </form>
 
-<!-- Filter form -->
 <form method="get" action="admin_courses_enrolled.php">
     <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
     <input type="text" name="keyword" placeholder="Search by name or email" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
@@ -89,10 +87,10 @@ $students = EnrollmentModel::getEnrolledStudents($course_id, $keyword);
     <?php foreach ($students as $i => $student): ?>
     <tr>
         <td><?php echo $i + 1; ?></td>
-        <td><?php echo htmlspecialchars($student['student_id']); ?></td>
-        <td><?php echo htmlspecialchars($student['name']); ?></td>
-        <td><?php echo htmlspecialchars($student['email']); ?></td>
-        <td><?php echo htmlspecialchars($student['enrolled_at']); ?></td>
+        <td><?php echo htmlspecialchars($student->student_id); ?></td>
+        <td><?php echo htmlspecialchars($student->name); ?></td>
+        <td><?php echo htmlspecialchars($student->email); ?></td>
+        <td><?php echo htmlspecialchars($student->enrolled_at); ?></td>
     </tr>
     <?php endforeach; ?>
 </table>

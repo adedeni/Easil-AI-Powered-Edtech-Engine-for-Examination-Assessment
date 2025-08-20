@@ -57,7 +57,7 @@ if(!$user->isLoggedIn()){
                 <td><?php echo htmlspecialchars($course->code); ?></td>
                 <td><?php echo htmlspecialchars($course->status); ?></td>
                 <td><?php echo htmlspecialchars($course->department); ?></td>
-                <td><?php echo htmlspecialchars($course->coordinator); ?></td>
+                <td><?php echo htmlspecialchars($course->coordinator ?? 'N/A'); ?></td>
                 <td><?php echo htmlspecialchars($course->created_at); ?></td>
                 <td>
                     <a href="lecturer_courses_enroll.php?course_id=<?php echo $course->id; ?>">Enroll Students</a> |

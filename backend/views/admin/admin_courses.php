@@ -60,7 +60,7 @@ $user = Guard::requireAdmin();
             <a href="admin_courses_edit.php?id=<?php echo htmlspecialchars($course->id); ?>">Edit</a> |
             <a href="admin_courses_delete.php?id=<?php echo htmlspecialchars($course->id); ?>" onclick="return confirm('Delete this course?');">Delete</a> |
             <a href="admin_courses_details.php?id=<?php echo htmlspecialchars($course->id); ?>">Details</a> |
-            <a href="admin_courses_enrolled.php?id=<?php echo htmlspecialchars($course->id); ?>">Enrolled Students</a>
+            <a href="admin_courses_enrolled.php?course_id=<?php echo htmlspecialchars($course->id); ?>">Enrolled Students</a>
         </td>
     </tr>
     <?php endforeach; ?>
