@@ -13,4 +13,8 @@ class CourseModel {
         ]);
     }
     
+    public static function find($id) {
+        $db = DB::getInstance();
+        return $db->get('courses', ['id', '=', $id])->first();
+    }
 }
