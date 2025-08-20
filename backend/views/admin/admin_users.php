@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Manage Users</title>
-</head>
-<body>
 <?php
 require_once '../../app/Core/init.php';
 
@@ -30,6 +22,7 @@ if (Input::exists()) {
       $email = trim(Input::get('email'));
       $new_role_id = (int) Input::get('role_id');
       $ident = trim(Input::get('identification_number'));
+      $department = trim(Input::get('department')); // Add this line
 
       $isCurrentSuper = ((int) $user->data()->id === $SUPER_ADMIN_ID);
       if ($new_role_id === 3 && !$isCurrentSuper) {
@@ -56,6 +49,7 @@ if (Input::exists()) {
               'salt' => $salt,
               'role_id' => $new_role_id,
               'identification_number' => $ident,
+              'department' => $department, // Add this line
               'created_at' => date('Y-m-d H:i:s'),
               'force_password_change' => 1,
               'status' => 'active'
@@ -414,6 +408,15 @@ function buildQuery($overrides = [])
   return count($pairs) ? ('?' . implode('&', $pairs)) : '';
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Manage Users</title>
+</head>
+<body>
+
 <h1>Manage Users</h1>
 <p><a href="admin_audit_logs.php">View Audit Logs</a> | <a href="admin_users_export.php<?php echo buildQuery(); ?>" target="_blank">Export Users CSV</a></p>
 <?php if ($successMessage): ?>
@@ -476,6 +479,10 @@ function buildQuery($overrides = [])
   <div>
     <label>Identification Number</label>
     <input type="text" name="identification_number" required>
+  </div>
+  <div>
+    <label for="department">Department:</label>
+    <input type="text" name="department" id="department">
   </div>
   <button type="submit">Create</button>
 </form>
