@@ -10,6 +10,7 @@ $user = Guard::requireAdmin();
 <body>
     <h1>Bulk Import Courses</h1>
     <p>Welcome, <?php echo escape($user->data()->username); ?>!</p>
+    <p><a href="admin_courses.php">&larr; Back to Courses</a></p>
     <form action="admin_courses_import.php" method="post" enctype="multipart/form-data">
         <label for="csv_file">Select CSV file:</label>
         <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
@@ -40,7 +41,7 @@ $user = Guard::requireAdmin();
                     continue;
                 }
 
-                // Insert course (implement this in your CourseModel)
+                
                 $result = CourseModel::create([
                     'code' => $code,
                     'title' => $title,
