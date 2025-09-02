@@ -26,16 +26,48 @@ $endpoint = isset($requestUri[1]) ? $requestUri[1] : null;
 
 // Route the request
 switch ($endpoint) {
-    case 'login':
-        require_once 'routes/login.php';
+    case 'auth':
+        require_once 'routes/auth.php';
         break;
 
     case 'users':
         require_once 'routes/users.php';
         break;
 
+    case 'courses':
+        require_once 'routes/courses.php';
+        break;
+
+    case 'exams':
+        require_once 'routes/exams.php';
+        break;
+
+    case 'enrollments':
+        require_once 'routes/enrollments.php';
+        break;
+
+    case 'results':
+        require_once 'routes/results.php';
+        break;
+
+    case 'dashboard':
+        require_once 'routes/dashboard.php';
+        break;
+
     default:
         http_response_code(404);
-        echo json_encode(["error" => "Endpoint not found"]);
+        echo json_encode([
+            "success" => false,
+            "error" => "Endpoint not found",
+            "available_endpoints" => [
+                "auth" => "Authentication endpoints",
+                "users" => "User management",
+                "courses" => "Course management", 
+                "exams" => "Exam management",
+                "enrollments" => "Student enrollments",
+                "results" => "Exam results",
+                "dashboard" => "Dashboard data"
+            ]
+        ]);
         break;
 }
