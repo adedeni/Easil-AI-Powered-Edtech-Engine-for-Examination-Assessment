@@ -7,13 +7,29 @@ error_reporting(E_ALL);
 
 define('APPROOT', dirname(dirname(__DIR__)));
 
+// Database configurations
+// LOCAL (active)
+$mysqlLocal = [
+    'host' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'db' => 'easil'
+];
+
+// LIVE (toggle by assigning $activeMysql to this)
+$mysqlLive = [
+    'host' => 'localhost',
+    'username' => 'cereuste',
+    'password' => '2-hmNTOVo!965t',
+    'db' => 'cereuste_easil'
+];
+
+// Choose which to use:
+$activeMysql = $mysqlLocal; // default: LOCAL
+// $activeMysql = $mysqlLive; // uncomment to use LIVE
+
 $GLOBALS['config'] = [
-    'mysql' => [
-        'host' => 'localhost',
-        'username' => 'cereuste',
-        'password' => '2-hmNTOVo!965t',
-        'db' => 'cereuste_easil'
-    ],
+    'mysql' => $activeMysql,
     'remember' => [
         'cookie_name' => 'hash',
         'cookie_expiry' => 604800

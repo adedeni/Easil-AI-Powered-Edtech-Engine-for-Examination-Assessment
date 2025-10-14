@@ -1,38 +1,56 @@
 RewriteEngine On
-RewriteBase /
+RewriteBase /easil/
 
-# 0. Skip rewrite for backend or public folders (allow direct access)
-RewriteRule ^(easil_backend|public)/ - [L]
+# ===================================================================
+# SECTION A: DIRECTIVES & EXCLUSIONS
+# ===================================================================
 
-# 1. (Optional) Force HTTPS and www for production
-# Commented for local development
-# RewriteCond %{HTTPS} !=on [OR]
-# RewriteCond %{HTTP_HOST} !^www\. [NC]
-# RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# 1. Allow direct access to existing files and directories.
+# This is crucial. If a request is for a real file (like a CSS file or an image),
+# or a real directory, stop processing immediately.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
 
-# 2. Remove .php from URLs (only for public frontend routes)
-RewriteCond %{THE_REQUEST} \s/(.+)\.php[\s?] [NC]
-RewriteRule ^ %1 [R=301,L,NC]
+# 2. Redirect requests that manually include ".php" to the clean URL.
+# This keeps the browser URL tidy. e.g., /easil/contact.php -> /easil/contact
+# This rule is ignored for the backend/views folder.
+RewriteCond %{THE_REQUEST} \s/easil/(.+?)\.php[\s?] [NC]
+RewriteCond %1 !^backend/views/ [NC]
+RewriteRule ^ %1 [R=301,L]
 
-# 3. Internally add .php if file exists
-RewriteCond %{REQUEST_FILENAME} !-f
+# 3. Block direct browser access to .php files in the backend/views folder.
+# This is a security rule. Throws a 404 error if someone tries.
+RewriteRule ^backend/views/(.+)\.php$ - [R=404,L]
+
+# ===================================================================
+# SECTION B: APPLICATION ROUTING (THE FRONT CONTROLLER)
+# ===================================================================
+
+# 4. API Routing: Route all /api/ requests to the API's entry point.
+# This rule runs before the main routing rules.
+RewriteRule ^api/(.*)$ backend/public/api/index.php [QSA,L]
+
+# 5. Main Content Routing:
+# First, try to internally rewrite to a corresponding .php file.
+# e.g., A request for "/contact" will be served by "/contact.php".
 RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^(.*)$ $1.php [L]
 
-# 4. API Routing
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^api/(.*)$ easil_backend/routes/api.php [QSA,L]
+# 6. Fallback Routing: If no matching .php file was found, send the
+# request to the main index.php to be handled by your PHP router.
+# This handles dynamic URLs like /products/123.
+RewriteRule ^(.*)$ index.php [QSA,L]
 
-# 5. Main routing to frontend index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ easil/index.php [QSA,L]
 
-# 6. Custom 404 Page
-ErrorDocument 404 /public/errors/404.php
+# ===================================================================
+# SECTION C: ERROR HANDLING & PERFORMANCE
+# ===================================================================
 
-# 7. Cache static assets
+# 7. Custom 404 Page
+ErrorDocument 404 /easil/backend/public/errors/404.php
+
+# 8. Cache static assets (Your original code was perfect)
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresByType image/jpg "access plus 1 year"
@@ -44,3 +62,4 @@ ErrorDocument 404 /public/errors/404.php
     ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType application/x-javascript "access plus 1 month"
 </IfModule>
+
